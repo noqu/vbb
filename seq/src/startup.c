@@ -329,7 +329,11 @@ int		sts;
 #ifdef SUN_CC
 exit_terminate ()
    {
+#ifdef VBB_ORIGINAL
     exit ();
+#else
+    exit (0);
+#endif
    }
 #endif
 

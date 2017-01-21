@@ -21,7 +21,11 @@
 			 * sizeof (int))
 
 #ifdef SUN_CC
+#ifdef VBB_ORIGINAL
 #define SPRINTF(ARGS)	(strlen (sprintf ARGS))
+#else
+#define SPRINTF(ARGS)   (sprintf ARGS)
+#endif
 #else
 #define SPRINTF(ARGS)	(sprintf ARGS)
 #endif
