@@ -1,0 +1,49 @@
+Dieses Verzeichnis enthaelt Hilfsprogramme, die zum Test und zur
+Konfiguration dienen. In der Regel werden diese Programme bei der
+Installation oder Uebersetzung von 'make' automatisch aufgerufen.
+(Abgesehen von den Programmen zur zur Erzeugung zufaelliger
+Testprobleme)
+
+build_tori*	Baut mit Hilfe von mk_torus die fuer die Arbeit
+		ausgewaehlten Torus-Konfigurationen. Muss in 
+		../conf/torus aufgerufen werden. Wird nur im 
+		Falle einer Veraenderung der Torus-Offsets benoetigt.
+
+conf.circle*	Erstellt eine .dsc-Datei fuer die 'circle'-
+		Konfiguration. Wird nur benoetigt, falls neue
+		'circle'-Konfigurationen erzeugt werden sollen.
+
+conf.torus*	Erstellt eine .dsc-datei fuer eine Torus-Konfiguration
+		mit beliebigen Zeilen-/Spalten-Offsets.
+
+makefile	Lokales Makefile, wird von 'make' aufgerufen
+
+mk_exe*		Erzeugt in 'bin' ein kurzes Skript, das fuer eine
+		bestimmte Instanz u. Konfiguration den iserver
+		aufruft. Wird von 'make' zur Erzeugung der Skripts
+		in 'bin' verwendet. 
+
+mk_msp.c	Quellcode fuer mk_msp. Erzeugt ein zufaelliges
+		Maschinenbelegungsproblem. Syntax wie mk_tsp.c
+
+mk_prob*	Erzeugt aus einer generischen Konfigurations-
+		beschreibung eine Konfiguration fuer eine Instanz.
+		Wird von 'make' beim Erzeugen von Instanzen
+		verwendet. 
+
+mk_scp.c	Quellcode fuer mk_scp. Erzeugt ein zufaelliges
+		Ueberdeckungsproblem mit Q Quellen, S Senken und
+		einer Verbindungswahrscheinlichkeit P. Die
+		Bewertungen werden zufaellig aus dem Intervall [0, M]
+		gewaehlt. 
+		Usage: mk_scp [-q <Q>] [-s <S>] [-m <M>] [-p <P>]
+
+mk_torus*	Erzeugt eine Torus-Konfiguration mit vorgegebenen
+		Zeilen- und Spalten-Offsets. Wird nur im Falle 
+		einer Veraenderung der Torus-Offsets benoetigt.
+
+mk_tsp.c	Quellcode fuer mk_tsp. Erzeugt ein zufaelliges 
+		Traveling-Salesman-Problem mit N Ecken, deren Laenge
+		zufaellig aus dem Interval [0, M] gewaehlt wird. Die
+		Verbindungswahrscheinlichkeit ist P.
+		Usage: mk_tsp [-s <N>] [-m <M>] [-p <P>]

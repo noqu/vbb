@@ -1,0 +1,16 @@
+:
+if [ $# -ne 2 ]
+then
+    echo "USAGE: $0 <anz> <tsp-nr>" >&2
+    exit 1
+fi
+
+NR=$1
+TSP=$2
+	
+CMD="tsp.${NR}t mat=../TSPs/tsp30.$TSP NAME=$NR/$TSP @para.$NR \
+|& tee -a prot.$NR"
+
+csh <<END
+$CMD
+END

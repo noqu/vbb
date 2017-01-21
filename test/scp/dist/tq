@@ -1,0 +1,18 @@
+:
+if [ $# -ne 4 ]
+then
+    echo "USAGE: $0 <anz> <scp-nr> <hi> <lo>" >&2
+    exit 1
+fi
+
+NR=$1
+SCP=$2
+HI=$3
+LO=$4
+	
+CMD="scp.${NR}t kl=../SCPs/scp45.$SCP DIST_HIGH=$HI DIST_LOW=$LO \
+NAME=$NR/$SCP/$HI/$LO @para.$NR |& tee -a prot.$NR.$SCP"
+
+csh <<END
+$CMD
+END

@@ -1,0 +1,2 @@
+mk_torus <n> <x> <y> erzeugt ein vbb.n2.cfs und ein vbb.n2.dsc
+vbb_to <problem> erzeugt aus den vbb-Dateien problemspezifische

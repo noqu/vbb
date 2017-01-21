@@ -1,0 +1,49 @@
+Dieses Verzeichnis enthaelt den Quellcode fuer den sequentiellen Kern,
+wie er auf einem einzelnen Transputer oder einer Sun lauffaehig ist.
+
+error.h		Allgemeine Deklarationen fuer Fehlerbehandlung
+		Wird von allen Modulen included.
+
+expand.c	Modul Expander (sequentielle Form, behandelt Heap
+		und Bestloesungen selbst, kein eigener Prozess)
+expand.h	Deklarationen fuer den Expander
+
+heap.c		Modul Heap; wird direkt vom Expander aufgerufen
+heap.h		Deklarationen fuer Heap
+
+mem.c		Funktionen zur Speicherverwaltung; werden direkt
+		vom Expander etc. aufgerufen, kein eigener Memserver-
+		Prozess
+mem.h		Deklarationen fuer Speicherverwaltung
+
+read.c		Sammlung von Eingabefunktionen fuer Parameter, 
+		Matritzen und Kantenlisten. Kann von 
+		Instanzfunktionen benutzt werden
+read.h		Deklarationen fuer Eingabefunktionen
+
+set.c		Modul Set, stellt Datentyp 'Menge' bereit. Kann von
+		Instanzfunktionen benutzt werden.
+set.h		Deklarationen fuer Mengen
+
+startup.c	Modul Startup; Fuehrt Initialisierungen durch und
+		startet schliesslich die Funktion (! kein Prozess !)
+		'Expander'.
+startup.h	Deklarationen fuer Startup
+
+trace.c		Modul Trace; Stellt Tracing-Funktionen zur
+		Fehlersuche im Kern bereit.
+trace.h		Deklarationen fuer Trace
+
+types.h		Datentypen fuer den Kern. Wird von allen am Kern
+		beteiligten Modulen included.
+
+u_funcs.h	Deklarationen fuer die Instanzfunktionen; stellen
+		die Schnittstelle zwischen Kern und Instanzfunktionen
+		dar. Wird von Kern und Instanzen included.
+
+u_types.h	Generische Fassung der Datentypen fuer die
+		Instanzfunktionen. Wird von allen Kern-Modulen
+		included, die Umgang mit generischen Datentypen haben.
+		Die Instanzfunktionen includen stattdessen die
+		jeweilige instantiierte Variante der Datentype (siehe
+		bei ../../inst)

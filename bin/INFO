@@ -1,0 +1,15 @@
+In diesem Verzeichnis wird fuer jede erzeugte Konfiguration einer
+Instanz ein Shellskript angelegt, das den 'iserver' mit dem
+passenden 'Bootable File' und dem passenden 'dsc-File' startet.
+
+Alle Shellskripts folgen einer Namenskonvention:
+
+scp.16t
+      ^--- Kennbuchstabe fuer die Konfiguration (t: Torus, c: Circle)
+    ^^---- Anzahl der Transputer
+^^^------- Instanz (scp, tsp oder msp)
+
+Die letzten 3 Stellen koennen auch
+    seq	   sequentielle Version auf 1 Transputer
+    sun	   sequentielle version auf der Sun
+lauten.

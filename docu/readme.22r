@@ -1,0 +1,12 @@
+Nach 2.2 wurde eine umfangreiche Umbenennung von Dateien
+durchgefuehrt, leider ohne eigene Versionsnr.
+
+Dieses Verzeichnis enthaelt die unveraenderten Files aus 2.2 
+mit neuen Namen, um einen Vergleich mit 3.0 zu ermoeglichen
+
+Files, die nach 2.2 gesplittet wurden, tauchen hier 
+unter beiden neuen Namen komplett auf, um halbwegs
+aussagekraeftige diffs zu erhalten
+
+Umbenennung erfolgte (jetzt) mit Hilfe von
+rename.sh

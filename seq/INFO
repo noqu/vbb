@@ -1,0 +1,13 @@
+Dieses Verzeichnis enthaelt alle Dateien zum sequentiellen Kern.
+'make' erzeugt hier die Datei 'seq_kernel.lib', die den 
+sequentiellen Kern als Library zum Binden mit Instanzfunktionen
+enthaelt.
+
+makefile	Lokales Makefile, wird von 'make' aufgerufen.
+
+obj/		Hier legt 'make' Objektdateien an.
+
+seq_kernel.lib	Wird von 'make angelegt; enthaelt den fertigen
+		sequentiellen Kern.
+
+src/		C-Code fuer den sequentiellen Kern.

@@ -1,0 +1,159 @@
+/* @PROB@.25t.cfs */
+/* x/y-Torus-Konfiguration fuer n x n Transputer (n aus [3...8]) */
+/* fuer Supercluster mit T800 je 4 MB */
+/* x: Offset am Zeilenende in Abwaertsrichtung */
+/* y: Offset am unteren Spaltenende nach rechts gezaehlt */
+/* x und n MUESSEN TEILERFREMD SEIN !!!!!!! */
+/* x darf nicht Null sein */
+/* Hier: 5 x 5 Feld mit x = 3 und y = 4 */
+
+val	n	5;
+val	n2	25;
+val	x	3;
+val	y	4;
+
+processor (type = "T800", memory = 4M) tr[n2];
+
+rep i = 0 to n2 - 1
+   {
+    /* i.1 -> right(i).2 */
+    /* Wenn nicht am rechten Rand */
+    if (i % n != n -1)
+       {
+	connect tr[i].link[1] to tr[(i + 1) % n2].link[2];
+       }
+    /* Sonst */
+    else
+       {
+	connect tr[i].link[1] to
+	    tr[(i + 1 + n2 + ((x - 1) * n)) % n2].link[2];
+       }
+
+    /* i.0 -> top(i).3 */
+    /* Wenn i nicht root und nicht erste Reihe */
+    if (i != 0 && i >= n)
+       {
+        connect tr[i].link[0] to tr[i - n].link[3];
+       }
+    /* Sonst wenn i nicht root, aber erste Reihe */
+    else if (i != 0)
+       {
+        connect tr[i].link[0] to
+	    tr[n2 - n + ((i + n - y) % n)].link[3];
+       }
+   }
+
+connect tr[0].link[0] to host;
+
+/* Interface festlegen fuer root Prozess: */
+define process (heapsize = 3850K, stacksize = 100K, 
+	 interface (input	from_server,
+		    output	to_server,
+		    int		cpu_nr,
+		    input	in[3],
+		    output	out[3],
+		    int		nr_of_chans,
+		    int		nr_of_cpus = n2,
+		    int		last_in_ring = n2 - 1 - ((x - 1) * n))
+	)root_proc;
+
+/* Interface festlegen fuer Slave Prozesse: */
+/* Slave hat dummies statt Host-Channels: */
+define process (heapsize = 3850K, stacksize = 100K, 
+	 interface (int		dummy1 = 0,
+		    int		dummy2 = 0,
+		    int		cpu_nr,
+		    input	in[4],
+		    output	out[4],
+		    int		nr_of_chans,
+		    int		nr_of_cpus = n2,
+		    int		last_in_ring = n2 - 1 - ((x - 1) * n))
+	)slave_proc;
+
+/* Prozesse Root und Slaves definieren: */
+
+root_proc	(cpu_nr = 0, nr_of_chans = 3) root;
+slave_proc	             		      slave[n2 - 1];
+
+rep i = 1 to n2 - 1
+   {
+    if (i == n2 - y)
+	slave[i - 1] (cpu_nr = i, nr_of_chans = 3);
+    else
+	slave[i - 1] (cpu_nr = i, nr_of_chans = 4);
+   }
+
+/* Verbindungen zur Aussenwelt definieren: */
+input	host_inp;
+output	host_outp;
+
+/* Root an Host anschliessen: */
+connect root.from_server 	to host_inp;
+connect root.to_server 		to host_outp;
+
+/* Soft-Kanaele zwischen Transputern verbinden: */
+
+rep i = 1 to n2 - 1
+   {
+    /* i.0 -> right[i].1 */
+    /* i.0 <- right[i].1 */
+    /* Wenn nicht am rechten Rand */
+    if (i % n != n - 1)
+       {
+        connect slave[i - 1].out[0] to slave[i + 1 - 1].in[1];
+	connect slave[i - 1].in[0] to slave[i + 1 - 1].out[1];
+       }
+    /* Sonst wenn nicht Partner von root */
+    else if ((i + 1 + ((x - 1) * n)) % n2 != 0)
+       {
+	connect slave[i - 1].out[0] to
+	    slave[((i + 1 + ((x - 1) * n)) % n2) - 1].in[1];
+	connect slave[i - 1].in[0] to
+	    slave[((i + 1 + ((x - 1) * n)) % n2) - 1].out[1];
+       }
+    /* Sonst (i Partner von root) */
+    else
+       {
+	connect slave[i - 1].out[0] to root.in[1];
+	connect slave[i - 1].in[0] to root.out[1];
+       }
+
+    /* i.3 -> bottom[i].2 */
+    /* i.3 <- bottom[i].2 */
+    /* Wenn nicht am unteren Rand */
+    if (i + n < n2)
+       {
+        connect slave[i - 1].out[3] to slave[i + n - 1].in[2];
+        connect slave[i - 1].in[3] to slave[i + n - 1].out[2];
+       }
+    /* Sonst wenn nicht Partner von root */
+    else if ((i + y) % n != 0)
+       {
+        connect slave[i - 1].out[3] to 
+	    slave[((i + y) % n) - 1].in[2];
+        connect slave[i - 1].in[3] to 
+	    slave[((i + y) % n) - 1].out[2];
+       }
+    /* Sonst (i Partner von root) */
+    else
+        /* keine Verbindung */
+	connect slave[i - 1].out[3] to slave[i - 1].in[3];
+   }
+
+connect root.out[0] to slave[1 - 1].in[1];
+connect root.in[0] to slave[1 - 1].out[1];
+connect root.out[2] to slave[n - 1].in[2];
+connect root.in[2] to slave[n - 1].out[2];
+
+/* Ordne Prozesse auf Transputern an: */
+use "@DIR@/@PROB@.lku" for root;
+place root on tr[0];
+rep i = 0 to n2 - 2
+   {
+    use "@DIR@/@PROB@.red.lku" for slave[i];
+    place slave[i] on tr[i + 1];
+   }
+
+/* Verbinde Root-Transputer explizit mit Host: */
+place root.from_server on tr[0].link[0];
+place root.to_server on tr[0].link[0];

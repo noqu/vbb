@@ -1,0 +1,7 @@
+Nicht lauffaehige Version mit kopierten incumbents im Dispatcher, um
+auch Incumbent-Knoten in inout freigeben koennen.
+
+Aenderung zurueckgestellt weil zu kompliziert und von geringem
+Nutzen.
+
+Incumbent-Knoten versickern jetzt in inout. (So what ?)

@@ -1,0 +1,151 @@
+Aenderungen von 2.1 auf 2.2
+Nov 10 19:11 1992  
+
+    Version fuer 2 Transputer
+    Feste Konfiguration (in k_seq festgelegt)
+    u_glob wird flachgeklopft und weitergegeben
+    Alle 4. erzeugten Knoten wird einer abgegeben an Nachbarn
+    Termination-Detection verteilt ueber Token-passing
+    Kanal-Protokoll jetzt zweiteilig: type/item
+    Tracing jetzt konsequent mit Zeitangaben
+    Tracing allgemein verbessert, Werte in Knoten aussagefaehiger
+    Viele ueble Bugs beseitigt !
+
+Neue Files:
+    sbb.1.cfs		Konfiguration fuer 1-Transputer, 1 System
+    sbb.2.cfs		Konfiguration fuer 2-Transputer, 2 Systeme
+    sbb.cfs		Auf sbb.1.csf oder sbb.2.cfs gelinkt
+    todo		Anmerkungen und Wunschliste fuer Aenderungen
+    trace.channel	k_seq-Anteil fuer Trace-Weitergabe ueber Kanaele
+
+Gleichgeblieben:
+    e_seq.h
+    inout.h
+    k_seq.h
+    k_types.h
+    m_seq.h
+    matrin.h
+    mkmatr.c
+    u_types.h
+
+e_seq.c:
+    Feststellung, dass Heap leer, jetzt ueber Q_PARTNER_DEAD
+    Expander beendet nicht mehr den Memserver (wieso auch ?)
+    Tracing verkuerzt (ueberfluessige Meldungen weg)
+    Tracing spaeter bzw. mit extra Berechnungen wg. korrekten Werten
+    value ueberfluessig (weg damit !)
+    TV-Meldung nachgebessert
+
+error.h:
+    misc.h wird included (wieso denn ?)
+    FEHLER() macht exit_terminate statt exit
+
+h_seq.h:
+    globale Variable parallel wird ausgewertet
+    cpu_nr wird uebergeben
+    sts wird initialisiert (war uebler bug !!)
+    counter beginnt bei cpu_nr (recht wahllos)
+    Termination Detection aufgebaut:
+	idle
+	i_have_a_token
+	token_creator
+	sent_work
+	next_in_ring
+    Tracing verbessert (Jede Veraenderung ausser Expander)
+    Incumbents vom Expander werden nur bedingt weitergegeben
+    Incumbents von In werden weitergegeben
+    Leerer Heap setzt zunaechst nur idle auf TRUE
+    outstanding bei in/out geloescht (uebler bug !)
+    Eingehender Knoten loescht idle
+    eingehendes Token wird registriert
+    eingehendes Finish wird weitergegeben, dann h_finished gesetzt
+    ausgehende Knoten setzen sent_work
+    h_put_on_heap nach erfolglosem Verschicken korrigiert (uebel)
+    Wenn idle, wird Token bearbeitet (-> TD-Entwurf)
+    Wenn nicht parallel, fuehrt bereits idle zum Abbruch
+
+h_seq.h:
+    cpu_nr als Parameter aufgenommen
+
+inout.c:
+    out:
+	q_item als eigene Variable 
+	keep_node-Flag als Workaround fuer Incumbent-Problematik
+	Typ der Flat-Nodes aus flat_node herausgenommen
+	Verschiedene Behandlung der Items in der Queue, je nach type
+	    Incumbents werden behalten
+	    Alle Nodes werden flachgeklopft
+	    Tokens und Finishes werden direkt verschickt
+	Verschicken in zwei Schritten: type/item
+    in:
+	dummy eingefuehrt, um type nicht zu ueberschreiben (uebel)
+	Typ der Flat-Nodes aus flat_node herausgenommen
+	Lesen vom Kanal in zwei Schritten: type/item
+	Verschiedene Behandlung der eingegangenen Items:
+	    Knoten werden ausgepackt
+	    Token und Finishes werden direkt empfangen
+
+k_seq.c:
+    misc.h wird included (wieso ?)
+    STACK_SIZE fuer alle Prozesse hochgesetzt auf 8192
+    parallel als neue Variable
+    u_glob jezt kein Zeiger mehr
+    Neue variablen:
+	u_glob_chan
+	flat_u_glob
+	flat_u_size
+	cpu_nr
+	cpu_nr_p
+	trace_buf_size
+	j
+    cpu_nr und in/out_channel[0] aus .cfs gelesen (provisorisch)
+    Queues werden erst angelegt (wg. Tracer-Queues)
+    Wenn nicht parallel, wird Kanal soft allokiert (in = out)
+    Unterscheidung root-slave: u_glob verschicken/empfangen
+    Nur root macht Startknoten und Anfangsincumbent
+    u_node von Incumbent wird halbwegs initialisiert (uebler bug)
+    Heapserver jetzt mit 8 Argumenten gestartet
+    Alle anderen mit expliziter Stack-Groesse
+    Tracer-Queues werden nur bis tt geleert
+    Zeit und Herkunft der Trace-Messages wird ausgegeben
+    Ausgabe von Loesung etc. abhaengig von root/slave
+    Am Ende exit_terminate statt exit
+
+m_seq.c:
+    Tracing-Format korrigiert
+
+makefile:
+    sbb.lku in SRC, nicht in OBJ
+    icconf auch nach Aenderungen an sbb.lku neu (?)
+    icollect jetzt ueber sbb.cfb, kein -t mehr
+    sbb.cfb als neues Target eingefuehrt
+
+matrin.c:
+    Neue variable mat_buf
+    Matrixkoerper wird am Stueck allokiert
+
+queue.c:
+    Blockierende Funktionen liefern Q_PARTNER_DEAD als Status
+
+queue.h:
+    neuer Fehler: Q_PARTNER_DEAD
+    neue Item-Typen: Q_TOKEN, Q_FINISH
+
+trace.c:
+    Zeit-Ausgabe uebernimmt jetzt k_seq
+    terminierende FIXED-Ausgabe eingefuehrt (auskommentiert)
+    Kleinere Formatverbesserungen der printfs
+
+trace.h:
+    TRACE_BUF_SIZE von 512 auf 1024 hochgesetzt
+
+u_tsp.c:
+    qm als statische Matrix eingefuehrt (Bullshit, weg damit)
+    u_init_glob bekommt jetzt u_glob_t* statt **
+    u_sizeof_flat_node statt u_sizeof_flat
+    u_flat_glob und u_unflat_glob neu
+
+u_tsp.h:
+    u_init_glob bekommt jetzt u_glob_t* statt **
+    u_sizeof_flat_node statt u_sizeof_flat
+    u_flat_glob und u_unflat_glob neu

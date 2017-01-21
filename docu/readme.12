@@ -1,0 +1,62 @@
+Aenderungen von 1.1 auf 1.2
+Sep 14 14:17 1992  
+auf SUN
+
+Statistik wird gefuehrt. Heuristische Loesung des TSP mit NN. 
+Minima bei l-Bounds mit Indizes statt Werten. Bugs bei Minima beseitigt.
+
+same     	./h_seq.h
+same     	./m_seq.h
+same     	./matrin.c
+same     	./mkmatr.c
+same     	./trace.h
+
+
+error.h:
+    Statistikfunktionen werden auch in P_ST aufgerufen
+
+h_seq.c:
+    Statistik-Struktur als externe globale Variable eingefuegt
+    h_new_incumbent () schreibt Statistik elim_from_heap fort
+
+k_seq.c:
+    Statistik-Struktur als globale Variable eingefuegt
+    Neue Funktion k_print_stat ()
+    statistic-Struktur wird an verschiedenen Stellen geschrieben
+    u_generate_sol (), wenn neue Incumbent bei Heuristik
+    u_node->u_bound wird geschrieben
+
+k_types.h:
+    boolean rausgeworfen
+    stat_t neu
+
+m_seq.c:
+    Statistik-Struktur als globale Variable eingefuegt
+    m_get_node () schreibt Statistik
+
+makefile:
+    SHELL gesetzt fuer SUN
+    sbb.nh als NOHEURISTIC
+
+trace.c:
+    depth statt u_bound ausgegeben
+
+u_tsp.c:
+    NOHEURISTIC eingefuehrt
+    vorlaeufig k_types.h included (wieso ?) 
+    und extern statistic als globale Variable
+    zmin und smin komplett auf Indizes statt Werte umgestellt
+    u_node->depth wird jetzt auch gefuehrt
+    u_generate_sol beruecksichtigt jetzt Teilloesungen aus Heuristik
+    u_heur_loes () neu
+    Verschiedene Formeln fuer Prioritaet
+    Kopier- und Flat-Funktionen auf depth umgestellt
+    Fehler durch Verbindungen zu sich selbst beseitigt in get_[sz]min ()
+    (Fehlt in dircmp.out !)
+
+u_tsp.h:
+    Fehlermeldung U_MALLOC neu
+
+u_types.h:
+    u_bound entfernt in u_node_t
+    depth eingefuehrt in u_node_t

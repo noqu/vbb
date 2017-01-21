@@ -1,0 +1,111 @@
+Aenderungen von Version 3.1 auf 3.2
+
+Feb 10 18:22 1993  
+
+Laeuft zum ersten Mal auf bis zu 64 Transputern (mod n/4 cube)
+Abhaengigkeit von extra-iservern beseitigt
+div. Fehler korrigiert (mem-leak, stack-check, End-0 bei Q-Arrays)
+Kein Rejecting mehr
+Gueteabhaengige Strategie
+Prioritaet durch Parameter schaltbar
+Zeitmessung, mehr Statistik (sent, got, idle)
+reduzierte Lower Bound
+Byte-Felder in u_nodes
+u_tsp gut kommentiert
+
+Neue Dateien:
+    Verzeichnis btl mit 1/2/4-Konfiguration fuer sibelius
+    Verzeichnis cfs mit altem Zeug
+    Verzeichnis sc64 mit 1/2/4/8/16/32/64-Konfiguration fuer i90fs1
+    fake_io.c: Zum Linken der Reduced Library
+
+
+Gleichgeblieben:
+    disp.h
+    error.h
+    expand.h
+    heap.c
+    heap.h
+    inout.h
+    mkmatr
+    mkmatr.c
+    queue.c
+    read.c
+    read.h
+    startup.h
+    todo
+    trace.c
+    trace.h
+
+
+disp.c:
+    idle_timer wird nach erster Aktivitaet gefuehrt
+    Rejecting ausgebaut, stattdessen wartet disp auf leeren Vater
+    Schleife fuer Knotenempfang nur auf aktiven Queues
+    Statistik fuer verschickte und erhaltene Knoten wird gefuehrt
+    Strategieschleife hat etwas verschaerfte Bedingung
+    Schleife fuer Knotenbroadcast nur auf aktiven Queues
+    Strategie veraendert, jetzt mit HI, LO und IDLE
+
+expand.c:
+    Rejecting ausgebaut
+    Ueblen Bug gefunden: Speicherleck durch doppelte Sohn-Allok.
+    u_priority erhaelt neuen Parameter prio_par
+    statistic.heur_solved wird in expand gefuehrt
+
+inout.c:
+    Nur ein Test in Kommentaren (ProcAlt)
+
+makefile:
+    Flag fuer Stack-Check entfernt (Puuuh...)
+    Komplette Saetze fuer sc64 und sibelius
+    Reduced Library eingefuehrt
+
+mem.c:
+    Memserver erhaelt jetzt auch Max-Level
+    Queues werden nach Level ueberwacht jeweils vollstaendig geleert
+    Tracing eingefuehrt
+    Zeitscheibe wird nach jeder Runde abgegeben
+
+mem.h:
+    maxlevel eingetragen fuer memserver
+
+queue.h:
+    Q_REJECT fliegt raus, dafuer Q_IDLE
+
+startup.c:
+    Neue Parameter PRIO_PAR und DIST_{LOW/HIGH/IDLE}
+    Mit Defaults
+    time.h wird included
+    Arraygrenzen fuer Queues und link_connected erhoeht (Bug bei 4 )
+    timer wird mitgefuehrt (momentan 2, aber nur z. Test)
+    memserver bekommt Obergrenzen
+    Viele Ueberreste von Fehlersuche mit QQQ !!!
+    Statistik-Format mal wieder veraendert
+    Neue Parameter werden eingelesen in init_glob()
+
+types.h:
+    Neu in glob:
+	dist_{low/high/idle}, prio_par
+    Neu in statistic:
+	got, sent, time, idle
+
+u_tsp.c:
+    included nicht mehr types.h
+    fuehrt keine Statistik mehr selbst
+    u_priority erhaelt para
+    Alle int-Felder mit Indizes sind jetzt byte-Felder
+    Neue Funktionen getrsmin und getrzmin fuer reduzierte Bounds
+    Kommentare komplett ueberarbeitet auf generische Trennung
+    u_lower_bound berechnet jetzt reduzierte Bounds
+    Prioritaet nach neuer Formel berechnet
+
+u_tsp.h:
+    para in u_priority eingefuegt
+
+u_types.c:
+    Alle int-Felder mit Indizes jetzt byte-Felder
+
+u_types.h:
+    Typ byte eingefuehrt
+    Aenderung von u_node_t auf byte-Listen

@@ -1,0 +1,20 @@
+:
+# mk_prob <problem> <VERZ> <LKU_VERZ>
+# Erzeugt aus vbb*.cfs und vbb*.dsc instanzspezifische Dateien
+# Diese werden im Verzeichnis <verz> abgelegt. In die cfs-Dateien
+# wird LKU_VERZ als Verzeichnis fuer lku's eingesetzt
+
+DIR=$2
+LKU_VERZ=$3
+
+if [ $# -ne 3 ]
+then
+    echo "USAGE: $0 <problem> <VERZ> <LKU_VERZ>" >&2
+fi
+
+for i in vbb*
+do
+    FILE=$1`expr "$i" : "vbb\(.*\)"`
+    sed -e 's/@PROB@/'"$1"'/g' \
+	-e 's%@DIR@%'"$LKU_VERZ"'%g' $i > $DIR/$FILE
+done

@@ -1,0 +1,60 @@
+Aenderungen von 3.2 auf 3.25
+Mar  1 23:52 1993 
+(Nachtraeglich erstellt, 3.25 offenbar vom 16.Februar)
+
+Nur 1 wesentliche Aenderung, die sich ueberall durchzieht:
+Keine problem_size mehr, statt dessen u_glob->size
+
+Gleichgeblieben:
+    .make_all
+    disp.c
+    disp.h
+    error.h
+    expand.h
+    fake_io.c
+    heap.c
+    heap.h
+    makefile
+    mkmatr
+    mkmatr.c
+    queue.c
+    queue.h
+    read.c
+    read.h
+    sc64/conf
+    startup.h
+    tags
+    todo
+    trace.h
+    types.h
+    u_tsp.h
+
+expand.c:
+    problem_size raus
+
+inout.c
+    ganze u_glob statt size wird uebergeben
+
+inout.h
+    dito
+
+mem.c:
+    dito
+    m_init_mem und m_get_node bekommen auch u_glob
+
+startup.c:
+    dito
+
+trace.c
+    problem_size raus
+
+u_tsp.c:
+    Alle Funktionen erhalten u_glob
+    dafuer kein problem_size mehr
+
+u_types.c:
+    dito
+    entsprechende Aenderungen bei flacher u_glob
+
+u_types.h:
+    u_glob enthaelt jetzt size

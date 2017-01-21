@@ -1,0 +1,9 @@
+Version 1.0
+
+sequentieller Kern
+Benutzerfunktionen fuer TSP
+Anfang bei Knoten 1 (nicht 0)
+konstante Groesse 10 Knoten
+flaches u_node
+Bug bei matrin (): NULL am Stringende oder so ??
+makefile nicht fuer SUN geeignet wg. err

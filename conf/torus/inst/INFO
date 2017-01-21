@@ -1,0 +1,12 @@
+In diesem Verzeichnis legt 'make' fuer jede Instanz der Konfiguration
+'torus' vier Dateien mit folgenden Endungen an:
+
+.cfs		Konfigurationsbeschreibung fuer 'icconf'
+.cfb		Von 'icconf' uebersetzte Konfigurationsbeschreibung
+		fuer den Code-Collector 'icollect'
+.btl		'Bootable File', das mit Hile von 'iserver' auf dem
+		konfigurierten Netzwerk gebootet und gestartet werden
+		kann. (Geschieht normalerweise mit Hilfe der
+		Shellskripts in ../../../bin
+.dsc		Konfigurationsbeschreibung fuer 'saconfig' (wird zur
+		Laufzeit benoetigt)

@@ -1,0 +1,16 @@
+:
+if [ $# -ne 2 ]
+then
+    echo "USAGE: $0 <anz> <scp-nr>" >&2
+    exit 1
+fi
+
+NR=$1
+SCP=$2
+	
+CMD="scp.${NR}t kl=../SCPs/scp45.$SCP NAME=$NR/$SCP @para.$NR \
+|& tee -a prot.$NR"
+
+csh <<END
+$CMD
+END

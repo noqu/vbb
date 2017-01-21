@@ -1,0 +1,16 @@
+Dieses Verzeichnis enthaelt die Parameterdateien fuer die zur
+Suchstrategie durchgefuehrten Versuche beim TSP.
+Mit dem Shellskrip 'tq' koennen einzelne Versuche durchgefuehrt
+werden.
+
+USAGE: tq <anz> <tsp-nr> <lambda> <heur>
+anz:	Anzahl Transputer (1, 9, 36, 64)
+tsp_nr:	Nummer des Beispielproblems (1...10)
+lambda:	Parameter Lambda fuer die Prioritaetsberechnung
+heur:	'H' fuer Heuristik, 'N' ohne Heuristik
+
+para.1		Parameterdateien fuer die Versuche zur Verteilung
+para.36			"
+para.64			"
+para.9			"
+tq*		Shellskript zum Aufruf eines einzelnen Tests

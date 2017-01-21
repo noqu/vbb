@@ -1,0 +1,123 @@
+Aenderungen von 3.35 auf 4.0
+
+Feb 26 02:13 1993  
+Nachgebessert am 2.3.93 
+
+Komplett neue Fehlerbehandlung ueber Tokens im Netz
+Ausgabe von Fehlern verbessert
+Fehler (heap_loop, l_bound-Eintrag, reached-init) verbessert
+Reservehaltung bei mem, automatische Umschaltung auf LIFO
+Statistik besser konfigurierbar von aussen
+
+Gleichgeblieben:
+same     	./mkmatr.c
+same     	./scp.cfs
+same     	./set.h
+same     	./tsp.cfs
+
+Neu:
+    para: Bessere (kommentierte) Darstellung der Parameter
+    Error.txt: Konzept fuer die neue Fehlerbehandlung
+    Generic.txt: Konzept fuer generische module
+
+Ueberall:
+    kleine Verbesserungen wg. Warnings, unused variables, =, ...
+    Tracing abgeschaltet
+
+disp.c:
+    min_level bei disp weggenommen
+    outstanding kann nicht durch Fehlertokens < 0 werden
+    make_distrib fehlt
+    wenn Leerknoten an Memserver geht,fuehrt sts nicht mehr zu d_fin.
+    bei Expander-Ausgabe Q_ERROR bearbeiten
+    falsche Knoten v. Expander setzen sts, nicht d_finished
+    idle-broadcast wird mit Status abgefragt
+    bei In-Schleife wird Q_ERROR bearbeitet
+    falscher Knoten von In setzt sts, nicht d_fin.
+    Ueberpruefung der Partner (M und E) am Ende entfaellt
+    zusaetzliches B_ST ans Ende der Schleife
+    nach der Schleife wird nur sts geprueft, nicht d_finished
+    Fehler in sts werden auf jeden Fall an out[0] weitergegeben
+
+error.h:
+    ONE_HOST_CHAN fehlt
+    dafuer STATISTIC, STAT_SUMS, STAT_KEEP und NO_SOLUTION
+    Fehlercodes direkt hier deklariert
+    P_FEHLER: Neue Ausgabe bei Fehlermakros
+
+expand.c:
+    Fehlerabfragen bei memserver beachten auch type
+    Keine Fehlerabfragen bei Dispatcher
+    Fehlerabfrage nach der Schleife jetzt auf > ERROR statt != OK
+    Expander beendet sich gar nicht mehr selbst
+    Statt dessen wird Fehlertoken an Dispatcher geschickt
+    u_selection_t weg
+
+heap.c:
+    Uebler Fehler: heap->rightson->leftson == 0 bei leerem Heap !!
+    (Damit loopt new_incumbent)
+
+inout.c:
+    out:
+    out hat kein sts mehr
+    wenn anfaengliche Allokierung nicht klappt, kommt return statt exit
+    Schicken an M wird nicht auf sts abgefragt
+    Falsche Knoten werden nicht mehr abgefangen
+    Q_ERROR wird bearbeitet: verschicken, selbst und disp beenden
+    Fehlerabfrage am Schleifenende fehlt
+    in:
+    beim Anfang von in Fehler korrigiert: in statt out
+    Fehler von M werden nur an disp weitergegeben, selbst ignoriert
+    Fehler von disp werden ignoriert
+    Falsche Knoten werden nicht mehr moniert
+    Q_ERROR wird verarbeitet: an disp, selbst beenden
+    Am Ende keine Fehlerabfrage mehr noetig
+
+makefile:
+    Neues Namenskonzept, erlaubt maken aller Versionen ohne Aenderung
+
+mem.c:
+    included misc.h (unnoetig)
+    Reserve wird am Anfang allokiert, fuer LIFO
+    Fehlerabfrage bei m_get_mem geaendert:
+    Wenn einmal out of mem, werden Fehlertokens verschickt
+    Keine Fehlerabfrage mehr abgesehen davon
+    Nur echte Nodes werden gefreet (keine Fehlertokens)
+    Fehlerprovokation in m_get_node (auskommentiert)
+
+queue.h:
+    Q_ERROR neu
+
+read.c:
+    Andere Reaktionen bei Fehlern
+    Fehler entdeckt: reached[] wurde nicht initialisiert
+
+startup.c:
+    #defines raus nach startup.h
+    timer2 weg
+    Statistik-Struktur wird mit 0 initialisiert
+    START_HEUR nicht mehr ausgewertet, immer true
+    Entscheidung fuer Statistik-Kaskade jetzt von D_DONE und
+	STAT_KEEP abhaengig
+    unzaehlige Kommentare entfernt bzw. verbessert
+    print_stat von STATISTIC abhaengig gemacht
+    mehr Statistikparameter werden aufsummiert
+    Durchschnittswerte werden gebildet
+    Summen werden ueber STAT_SUMS gesteuert
+    Es werden nur in/out[1..3] beendet
+    Nur wenn kein Fehler, auch in[0] beenden, sonst darauf warten
+    Ausgabe der Loesung von NO_SOLUTION abhaengig
+    Bei Fehler wird erst ausgegeben, dann auf in[0] gewartet
+    print_stat angepasst, mehr Summen, bessere Ausgabe
+    print_error() neu
+    neue Parameter in init_glob eingetragen
+
+types.h:
+    reserve_size in glob
+
+u_funcs.h:
+    Fehlernummern hier U_FUNCS_ERR - x, sollte aich ausgewertet
+	werden QQQ
+
+u_tsp.c:
+    l_bound wird in node am Ende eingetragen

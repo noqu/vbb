@@ -1,0 +1,73 @@
+Aenderungen von 1.0 auf 1.1 
+---------------------------
+Stand 27.8.92    22:40
+
+Dynamische Erzeugung von Knoten mit eigenen Funktionen. Knoten beginnen
+mit 0 statt mit 1. MAXINT wird beruecksichtigt. Diverse Bugs 
+ausgeraeumt. 
+
+Files hinzugefuegt:
+    mkmatr.c 
+
+Files unveraendert:
+    error.h
+    h_seq.h
+    k_types.h
+    m_seq.h
+    u_tsp.h
+
+h_seq.c:
+    in h_new_incumbent () beim eliminieren alter Knoten >= statt >
+
+k_seq.c:
+    umgestellt auf problem_size
+    l_bound wird in k_node kopiert
+    Parent wird nach Erzeugen der Soehne gefree't
+    unbeschraenkte Knoten werden in k_try_pruning erkannt
+    Tracing der Upper Bound auskommentiert
+
+m_seq.c:
+    umgestellt auf problem_size
+    ANZ_BLOECKE runtergesetzt
+    included jetzt auch u_tsp wg. u_node_t
+    u_nodes werden ueber u_create_node () erzeugt
+    dadurch andere Bauweise der u_list in m_init_mem
+
+makefile:
+    neuer Eintrag fuer mkmatr
+    k_seq.o haengt auch von trace.h ab
+
+matrin.c:
+    included auch ctype.h
+    Ueberspringen des Leerraumes in matrin () jetzt zu Fuss (Sun-Fehler)
+
+trace.c:
+    umgestellt auf problem_size
+    Knotennummern abgeschafft
+    Listenende auf -1 umgestellt
+    Ausgabe durch Kommentieren verkuerzt und ausgerichtet
+
+trace.h:
+    Ausgabe von Knoten mit trennenden Leerzeilen
+
+u_tsp.c:
+    umgestellt auf problem_size
+    Listenende auf -1 umgestellt
+    Knotennummern auf 0 bis anz - 1 geaendert
+    in den child-Funktionen u_copy_node () statt memcpy ()
+    MAXINT-Loesungen werden beruecksichtigt in u_generate_sol ()
+    l_bound fuer MAXINT-Loesungen ebenfalls beruecksichtigt
+    Wurzel jetzt kenntlich an fixed == 0
+    Tracing ueber l_bound-Entstehung auskommentiert
+    u_priority beruecksichtigt Tiefe
+    Neue Funktionen: (Notwendig wegen dynamischer Laenge von u_nodes)
+	u_create_node (anzahl, size, nodes)
+	u_copy_node (from, to, size)
+	u_flat_node (node, size, flat)
+	u_unflat_node (flat, size, node)
+	u_sizeof_flat (size)
+
+u_types.h:
+    anzahl aus u_glob_t herausgenommen (ueberfluessig wg. problem_size)
+    Laenge von solution_t auf 50 erhoeht (Pfusch !)
+    in u_node_t alle Arrays durch Pointer ersetzt

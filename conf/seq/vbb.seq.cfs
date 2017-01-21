@@ -1,0 +1,51 @@
+/* @PROB@.n.cfs */
+/* Konfiguration fuer n Transputer (n aus [1, 2, 3, 4, 8]) */
+/* fuer Supercluster mit T800 je 4 MB */
+
+/* Folgende Zeile auskommentieren fuer icc auf sibelius */
+/* #include "setconf.inc" */
+
+val	n		1;	/* Anzahl Transputer	*/
+val	nr_of_links	0;	/* Anzahl verwendeter Links */
+
+processor (type = "T800", memory = 4M) transp[n];
+
+/* Root-Transputer an Host anschliessen: */
+connect transp[0].link[0] to host;
+
+/* Interface festlegen fuer root Prozess: */
+if (n == 1)
+   {
+    /* Braucht einen Dummy-Kanal, geht sonst nicht wg. Syntax: */
+    define process (heapsize = 3850K, stacksize = 100K, 
+	     interface (input	from_server,
+			output	to_server,
+			int	cpu_nr,
+			input	in[1],
+			output	out[1],
+			int	nr_of_chans = 0,
+			int	nr_of_cpus = 1)
+	    )root_proc;
+   }
+
+/* Prozesse Root und Slaves definieren: */
+root_proc	(cpu_nr = 0) root;
+
+/* Verbindungen zur Aussenwelt definieren:: */
+input	host_inp;
+output	host_outp;
+
+/* Root an Host anschliessen: */
+connect root.from_server 	to host_inp;
+connect root.to_server 	to host_outp;
+
+connect root.out[0] to root.in[0];
+
+/* Ordne Prozesse auf Transputern an: */
+use "@DIR@/@PROB@.lku" for root;
+place root on transp[0];
+
+/* Verbinde Root-Transputer explizit mit Host: */
+place root.from_server on transp[0].link[0];
+place root.to_server on transp[0].link[0];
+

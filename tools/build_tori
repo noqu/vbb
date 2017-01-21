@@ -1,0 +1,6 @@
+mk_torus 3 1 1
+mk_torus 4 3 2
+mk_torus 5 3 4
+mk_torus 6 5 3
+mk_torus 7 4 5
+mk_torus 8 5 5

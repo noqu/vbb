@@ -1,0 +1,15 @@
+:
+# mk_torus <kantenlaenge> <xoffset> <yoffset>
+# Erzeugt aus torus.cfs ein cfs-File mit den angegebenen Parametern
+# Erzeugt ein dazu passendes dsc-File mit Hilfe von conf.torus
+
+SOURCE=torus.cfs
+
+n=$1
+x=$2
+y=$3
+n2=`expr $n \* $n`
+sed -e 's/@n@/'$n'/g' -e 's/@n2@/'$n2'/g' -e 's/@x@/'$x'/g'\
+    -e 's/@y@/'$y'/g' < $SOURCE > vbb.$n2.cfs
+./conf.torus $n $x $y > vbb.$n2.dsc
+

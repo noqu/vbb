@@ -1,0 +1,8 @@
+
+Mon Feb  8 21:00:05 MET 1993
+
+Erster Lauf mit 32 Transputern geglueckt.
+Fehlt noch der Einbau von
+    reduced l_bound
+    mem-leak-fix
+    use-char-for-index

@@ -1,0 +1,88 @@
+Aenderungen von 4.0 auf 4.1
+Fri May  7 18:17:01 MET DST 1993
+
+Neue Files:
+    conf.circle		: Frueher conf
+    conf.torus		: Erzeugt Torus-dsc mit verschiedenen Params
+    mk_msp.c		: Erzeugt MSP-Probleme
+    mk_scp.c		: Frueher mkkl.c
+    mk_tsp.c		: Frueher mkmatr.c
+    trace.c		: Generische Trace-Funktionen, verwendet 
+			  u_trace_node () aus u_???.c
+    u_msp.c		: Instanzfunktionen fuer MSP
+    u_msp_types.h	: Typ-Instanzen fuer MSP
+    ... und einen kompletten Satz neue Konfigurationen fuer Tori
+
+Gleichgeblieben:
+
+    disp.h
+    error.h
+    expand.c
+    expand.h
+    fake_io.c
+    heap.h
+    inout.c
+    inout.h
+    mem.c
+    mem.h
+    queue.c
+    queue.h
+    read.h
+    set.c
+    set.h
+    trace.h
+    u_scp_types.h
+    u_tsp_types.h
+    u_types.h
+
+Weggefallen:
+    u_???_trace.c
+
+disp.c:
+    just_sent_to wird initialisiert (Puuhhh...)
+    sent_work wird auch nach Broadcast gesetzt
+    Bei Verteilung wird nicht auf idle, sondern heap_size abgefragt
+
+heap.c:
+    h_get_best_prio () prueft auch den LIFO-Stack, wenn Heap leer
+
+makefile:
+    Umstellung auf Kernel-Library
+    neue Konfigurationen hinzugefuegt
+    msp hinzugefuegt
+    Trace-Aenderungen fuehren zu Wegfall von u_???_trace.c
+
+para:
+    START_HEUR rausgenommen
+
+read.c:
+    init_params () liefert jetzt OK
+
+startup.c:
+    last_in_ring wird von icconf mitgeliefert (nicht mehr n-1)
+    ring_in und ring_out als Variablen eingefuehrt (wg. 2)
+    statistic.cpu_nr wird gesetzt
+    Queue-Groessen ueber startup.h einstellbar
+    Memserver-Level ebenfalls ueber startup.h
+    Statistik wird nach cpu_nr numeriert
+    Benutzerfehler bis U_MALLOC werden direkt ausgegeben
+
+startup.h:
+    Default-Werte angepasst
+    Queue-Groessen und Memserver-Level hier einstellbar
+
+types.h:
+    cpu_nr in statistic eingefuegt
+
+u_funcs.h:
+    Schwachsinnige negative Fehlernummern rausgeworfen
+    Neue Instanzfunktion u_trace_node ()
+
+u_scp.c:
+    Neue Instanzfunktion u_trace_node ()
+    Neue Heuristik (fehlt in DIRCMP.4.1)
+    Dafuer compare_val () zum Sortieren
+    
+u_tsp.c:
+    getr[zs]min statisch gemacht
+    Neue Instanzfunktion u_trace_node ()

@@ -1,0 +1,34 @@
+:
+# mk_exe <confdir> <bindir> <prob> <nr> <conf> <topdir>
+CONFDIR=$1
+BINDIR=$2
+PROB=$3
+NUMBERS=$4
+CONF=$5
+TOPDIR=$6
+
+if [ $CONF = "circle" ]
+then 
+    L=c
+elif [ $CONF = "torus" ]
+then
+    L=t
+elif [ $CONF = "seq" ]
+then
+    L=
+else
+    echo "$0: Unbekannte Konfiguration $CONF" >&2
+fi
+
+if [ $NUMBERS = "all" ]
+then
+    NUMBERS=`cat $CONFDIR/$CONF/NU`
+fi
+
+for NR in $NUMBERS
+do
+    echo ":
+	iserver -sr -sb $TOPDIR/$CONFDIR/$CONF/inst/$PROB.$NR$L.btl" \
+	'$*' > $BINDIR/$PROB.$NR$L
+    chmod +rx $BINDIR/$PROB.$NR$L
+done

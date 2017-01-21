@@ -1,0 +1,1429 @@
+readme.10
+--------------------------------------------------
+Version 1.0
+
+sequentieller Kern
+Benutzerfunktionen fuer TSP
+Anfang bei Knoten 1 (nicht 0)
+konstante Groesse 10 Knoten
+flaches u_node
+Bug bei matrin (): NULL am Stringende oder so ??
+makefile nicht fuer SUN geeignet wg. err
+
+
+
+
+readme.11
+--------------------------------------------------
+Aenderungen von 1.0 auf 1.1 
+---------------------------
+Stand 27.8.92    22:40
+
+Dynamische Erzeugung von Knoten mit eigenen Funktionen. Knoten beginnen
+mit 0 statt mit 1. MAXINT wird beruecksichtigt. Diverse Bugs 
+ausgeraeumt. 
+
+Files hinzugefuegt:
+    mkmatr.c 
+
+Files unveraendert:
+    error.h
+    h_seq.h
+    k_types.h
+    m_seq.h
+    u_tsp.h
+
+h_seq.c:
+    in h_new_incumbent () beim eliminieren alter Knoten >= statt >
+
+k_seq.c:
+    umgestellt auf problem_size
+    l_bound wird in k_node kopiert
+    Parent wird nach Erzeugen der Soehne gefree't
+    unbeschraenkte Knoten werden in k_try_pruning erkannt
+    Tracing der Upper Bound auskommentiert
+
+m_seq.c:
+    umgestellt auf problem_size
+    ANZ_BLOECKE runtergesetzt
+    included jetzt auch u_tsp wg. u_node_t
+    u_nodes werden ueber u_create_node () erzeugt
+    dadurch andere Bauweise der u_list in m_init_mem
+
+makefile:
+    neuer Eintrag fuer mkmatr
+    k_seq.o haengt auch von trace.h ab
+
+matrin.c:
+    included auch ctype.h
+    Ueberspringen des Leerraumes in matrin () jetzt zu Fuss (Sun-Fehler)
+
+trace.c:
+    umgestellt auf problem_size
+    Knotennummern abgeschafft
+    Listenende auf -1 umgestellt
+    Ausgabe durch Kommentieren verkuerzt und ausgerichtet
+
+trace.h:
+    Ausgabe von Knoten mit trennenden Leerzeilen
+
+u_tsp.c:
+    umgestellt auf problem_size
+    Listenende auf -1 umgestellt
+    Knotennummern auf 0 bis anz - 1 geaendert
+    in den child-Funktionen u_copy_node () statt memcpy ()
+    MAXINT-Loesungen werden beruecksichtigt in u_generate_sol ()
+    l_bound fuer MAXINT-Loesungen ebenfalls beruecksichtigt
+    Wurzel jetzt kenntlich an fixed == 0
+    Tracing ueber l_bound-Entstehung auskommentiert
+    u_priority beruecksichtigt Tiefe
+    Neue Funktionen: (Notwendig wegen dynamischer Laenge von u_nodes)
+	u_create_node (anzahl, size, nodes)
+	u_copy_node (from, to, size)
+	u_flat_node (node, size, flat)
+	u_unflat_node (flat, size, node)
+	u_sizeof_flat (size)
+
+u_types.h:
+    anzahl aus u_glob_t herausgenommen (ueberfluessig wg. problem_size)
+    Laenge von solution_t auf 50 erhoeht (Pfusch !)
+    in u_node_t alle Arrays durch Pointer ersetzt
+
+
+
+
+readme.115
+--------------------------------------------------
+Nachtraeglich entstandene Version 1.15, offenbar ein Vorlaeufer
+von 1.2. Hier als Ausgangspunkt benutzt, um Aenderungen in u_tsp
+einfach testen zu koennen. 
+
+
+
+
+readme.116
+--------------------------------------------------
+Nachtraegliche Aenderungen auf sequentieller Ebene.
+Verbesserung der unteren Schranke durch vollstaendige
+Reduktion der Entfernungsmatrix. Verwendung von char als
+Typ fuer die Felder in Knoten.
+
+Feb  5 15:07 1993  Comparison of 1.15 1.16 Page 1
+
+
+different	./h_seq.c
+different	./k_seq.c
+different	./u_tsp.c
+different	./u_types.h
+
+h_seq.c:
+    unbedeutend, Kommentare von Experiment uebergeblieben
+
+k_seq.c:
+    Fehler gefunden !! Bei letztem Sohn werden 2 Knoten allokiert
+
+u_tsp.c:
+    Tracing wieder eingebaut
+    static-Funktionen rausgenommen fuer profiling
+    an vielen Stellen char statt int
+    Fehler durch z-z Verbindung nochmal eliminiert (??)
+    Neue Funktionen: getrsmin() und getrzmin().
+    Kommentar korrigiert: Maximum der lbounds wird verwendet
+    u_lower_bound erheblich erweitert um Reduktion
+    Umgestellt auf Tiefensuche
+
+u_types.h:
+    viele char statt int
+
+
+
+
+readme.12
+--------------------------------------------------
+Aenderungen von 1.1 auf 1.2
+Sep 14 14:17 1992  
+auf SUN
+
+Statistik wird gefuehrt. Heuristische Loesung des TSP mit NN. 
+Minima bei l-Bounds mit Indizes statt Werten. Bugs bei Minima beseitigt.
+
+same     	./h_seq.h
+same     	./m_seq.h
+same     	./matrin.c
+same     	./mkmatr.c
+same     	./trace.h
+
+
+error.h:
+    Statistikfunktionen werden auch in P_ST aufgerufen
+
+h_seq.c:
+    Statistik-Struktur als externe globale Variable eingefuegt
+    h_new_incumbent () schreibt Statistik elim_from_heap fort
+
+k_seq.c:
+    Statistik-Struktur als globale Variable eingefuegt
+    Neue Funktion k_print_stat ()
+    statistic-Struktur wird an verschiedenen Stellen geschrieben
+    u_generate_sol (), wenn neue Incumbent bei Heuristik
+    u_node->u_bound wird geschrieben
+
+k_types.h:
+    boolean rausgeworfen
+    stat_t neu
+
+m_seq.c:
+    Statistik-Struktur als globale Variable eingefuegt
+    m_get_node () schreibt Statistik
+
+makefile:
+    SHELL gesetzt fuer SUN
+    sbb.nh als NOHEURISTIC
+
+trace.c:
+    depth statt u_bound ausgegeben
+
+u_tsp.c:
+    NOHEURISTIC eingefuehrt
+    vorlaeufig k_types.h included (wieso ?) 
+    und extern statistic als globale Variable
+    zmin und smin komplett auf Indizes statt Werte umgestellt
+    u_node->depth wird jetzt auch gefuehrt
+    u_generate_sol beruecksichtigt jetzt Teilloesungen aus Heuristik
+    u_heur_loes () neu
+    Verschiedene Formeln fuer Prioritaet
+    Kopier- und Flat-Funktionen auf depth umgestellt
+    Fehler durch Verbindungen zu sich selbst beseitigt in get_[sz]min ()
+    (Fehlt in dircmp.out !)
+
+u_tsp.h:
+    Fehlermeldung U_MALLOC neu
+
+u_types.h:
+    u_bound entfernt in u_node_t
+    depth eingefuehrt in u_node_t
+
+
+
+
+readme.20
+--------------------------------------------------
+Aenderungen von 1.2 auf 2.0
+Oct 12 15:18 1992  
+
+Umstellung des gesamten Systems auf Mehrprozessbetrieb auf einem
+Transputer. Kern, Expander, Memserver und Heapserver als jeweils
+eigene Prozesse, die ueber Queues miteinander kommunizieren.
+Loesungen werden nicht mehr als eigener Datentyp betrachtet sondern
+in normalen K-Nodes gefuehrt.  Ausserdem formale Einfuehrung 
+von Prototypen. Makefile und Includes transputerspezifisch.
+
+Neue Files:
+    e_seq.c		Code fuer Expander (frueher in k_seq.c)
+    e_seq.h		Prototypen
+    k_seq.h		Prototypen und neue Fehlertypen
+    matrin.h		Prototypen
+    queue.c		Asynchrone Queues
+    queue.h 		Prototypen, Typen  und neue Fehlertypen
+
+Gleichgeblieben:
+    mkmatr.c
+
+error.h:
+    QUEUE_ERR eingefuehrt
+    public eingefuehrt
+    FEHLER als eigenes Makro aus ST-Fkt. herausgenommen
+    B_ST fuer Server-Fehler
+
+h_seq.c
+    Prototypen fuer Funktionen eingefuehrt
+    stdlib.h included wg. Prototypen
+    incumbent jetzt vom Typ k_node_t*
+    h_read_incumbent entsprechend anders
+    in h_init_heap wird Incumbent nur mit Wert initialisiert
+    heap_server als eigener Prozess
+    alle Funktionen ausser Server und h_read_incumbent static gemacht
+    h_new_incumbent verwendet jetzt Queues
+    h_new_incumbent gibt Status zurueck
+
+h_seq.h:
+    Prototypen fuer Funktionen eingefuehrt
+    H_HEAP_EMPTY als eigene Fehlermeldung
+    alles ausser Server und h_read_incumbent () herausgenommen
+
+k_seq.c:
+    Prototypen fuer Funktionen eingefuehrt
+    enthaelt jetzt Code zum Erzeugen der Queues, Starten der Server etc.
+    Expander jetzt in e_seq.c
+    stdlib.h included wg. Prototypen
+    eigene k_seq.h fuer Fehler 
+    globale Flags [emh]_finished
+    h_init_heap () macht jetzt der Heapserver
+    Heap und Mem - Funktionen jetzt ueber Queues
+    Erzeugung des Startknotens auf dem Heap noch hier
+    Anfangs-Incumbent muss allokiert werden
+    Ausgabe von Loesung und Statistik hier
+
+e_seq.c:
+    Prototypen fuer Funktionen eingefuehrt
+    enthaelt jetzt den Expander-Code aus k_seq.c
+    Abbruchbedingung jetzt von Heapserver abhaengig
+    alle Knoten werden ueber Queues bewegt
+    Fehlerbehandlung auf B_ST umgestellt
+    u_solution wird statt u_generate_sol aufgerufen
+    Incumbent jetzt auch vom Typ k_node_t*
+    k_try_pruning erhaelt auch Queues
+    in k_try_pruning () eigene Knoten fuer Heuristik (ueber Queues)
+
+k_types.h:
+    Neues Element value in k_node_t aufgenommen
+
+m_seq.c:
+    Prototypen fuer Funktionen eingefuehrt
+    Umgestellt auf eigenen Server
+    stdlib.h included
+    alles ausser Server static gemacht
+
+m_seq.h:
+    Prototypen fuer Funktionen eingefuehrt
+    alles ausser Server herausgenommen
+    
+makefile:
+    Directories verkuerzt (wg. idebug)
+    Flags und Kommandos umgestellt auf Transputer
+    .make_all eingefuehrt
+    diverse Abhaengigkeiten ergaenzt
+
+matrin.c:
+    Prototypen fuer Funktionen eingefuehrt
+
+trace.c:
+    Prototypen fuer Funktionen eingefuehrt
+    Pointerwerte (in Kommentaren) hinzugefuegt
+
+trace.h:
+    Prototypen fuer Funktionen eingefuehrt
+    misc.h included fuer evtl. debug-Tracing
+
+u_tsp.c:
+    Prototypen fuer Funktionen eingefuehrt
+    Reihenfolge der Includes veraendert (wieso ?)
+    stdlib.h und string.h hinzugefuegt wg. Prototypen
+    matrin.h jetzt included wg. Prototypen
+    u_generate_sol () ersetzt durch u_solution ()
+    Loesungen werden jetzt als k_node_t* gefuehrt
+    Intern wird ZF-Wert in Lower-Bound gehalten fuer erneuten Aufruf
+    Kein Durchlaufen der Ecken mehr bei u_solution (), nur letzte 
+	Ecke und Rueckweg werden hinzugefuegt
+    u_heur_loes () arbeitet in u_node mit "umgewidmeten" Feldern
+    (u_heur_loes () noch ungetestet)
+    u_print_sol mit anderem Loesungstyp, liefert Status 
+    u_print_sol dreht Knoten in sich um
+
+u_tsp.h:
+    Prototypen fuer Funktionen eingefuehrt
+    U_INCOMPLETE_SOL als neue Fehlermeldung
+
+u_types.h:
+    u_solution_t rausgeworfen (bzw. auskommentiert)
+
+
+
+
+readme.21
+--------------------------------------------------
+Aenderungen von Version 2.0 auf 2.1
+Oct 21 14:01 1992  
+
+Prozesse fuer In und Out eingefuehrt
+Tracing wird jetzt ueber Queues abgewickelt (noch nicht ueber Kanaele)
+Incumbent wird von h_new_incumbent verglichen
+deswegen eigene Fkt h_init_incumbent
+k_seq kuemmert sich um Tracer-Queues (mit Zeitstempel)
+Fehler in u_flat_node beseitigt
+Tracing ueberarbeitet (bessere Aussagekraft der Werte)
+
+Neue Files
+    inout.c
+    inout.h
+
+Gleichgeblieben:
+    k_seq.h
+    k_types.h
+    matrin.c
+    mkmatr.c
+    u_tsp.h
+    u_types.h
+
+e_seq.c:
+    expander bekommt jetzt auch Tracer-Queue uebergeben
+    Trace-Makro-Aufrufe auf TKN reduziert und nach hinten verschoben
+    value wird jetzt direkt in Sohn geschreben
+    k_try_pruning erhaelt Tracer-Queue
+
+e_seq.h:
+    expander erhaelt Tracer-Queues
+
+error.h:
+    Neue Fehlermeldung INOUT_ERR
+
+h_seq.c:
+    Verwendet jetzt out_finished[4]
+    heap_server erhaelt Tracer-Queues
+    Neue Funktion h_init_incumbent
+    Weitergeben an Nachbarn itegriert in Heapserver
+    Counter und sendto werden mitgezaehlt fuer abwechselndes Senden
+    Statusabfrage nach h_new_incumbent korrigiert
+    empfangene Knoten werden verarbeitet
+    auch empfangene Incumbents, erste oder normale
+    h_new_incumbent ueberprueft selbst, ob incumbent besser
+    daher auch boolean
+
+h_seq.h:
+    heapserver erhaelt tracer_queues
+
+
+k_seq.c:
+    NR_OF_PROCESSES eingefuehrt wg. Tracing
+    Prozesse fuer in und out werden gestartet
+    (momentan noch von Hand festgelegt, welche)
+    in/out_finished[4] eingefuehrt
+    Queueverbindungen fuer in und out
+    Zaehler mi und mo fuer Memeserver-Queue-Array
+    Zaehler tt fuer Tracer-Queue-Array
+    included jetzt channel.h und inout.h
+    vorlaeufige Loesung: link_connected
+    k_server ueberwacht Tracer-Queues, macht fprintf und free
+    Kanaele wereen eingerichtet fuer in->out Kurzschluss
+    Heapserver, Expander und Memserver erhalten Tracer-Queues
+    Erste Incumbent ist vom Typ Q_INIT_INC
+    Anordnung der Initialisierungen veraendert
+    K-Server endet erst, wenn Tracer-Queues auch leer
+    Diverse Kommentare hinzugefuegt
+    Abbruchwerte in ...finished  werden einzeln aus sts erzeugt
+
+m_seq.c
+    memserver erhaelt auch Tracer-Queues
+
+m_seq.h
+    memserver erhaelt auch Tracer-Queues
+
+makefile:
+    inout.tco hinzugefuegt
+    diverse Files nicht mehr von trace.h abhaengig
+    queue.c, u_tsp.c
+
+matrin.h:
+    public in extern korrigiert
+
+
+queue.c:
+    Tracing entfernt (kein Server)
+
+queue.h:
+    Q_INIT_INC neuer Typ fuer Queue-Items
+
+trace.c:
+    komplett neu geschrieben fuer sprintf und verschicken
+    Neu: trace_feld, trace_string, trace_value, trace_k_node
+    included jetzt auch time.h (wg. Zeitstempel) und stdlib.h
+    Allokiert fuer jedes Tracepaket Platz
+    Trace-Format verkuerzt und einheitlicher gemacht
+
+trace.h:
+    Die Makros rufen jetzt nur noch die Funktionen aus trace.c
+    Alle Makros sind auf die Variable to_tracer angewiesen !
+    TRACE_BUF_SIZE wird hier festgelegt
+    Neuer Typ trace_t enthaelt String und Zeitstempel/Prozessornr.
+    Deklaration der neuen Funktionen aus trace.c
+
+u_tsp.c:
+    Tracing entfernt (kein Server)
+    BUG in u_flat_node beseitigt: Doppeltes Increment von flat
+
+
+
+
+readme.22
+--------------------------------------------------
+Aenderungen von 2.1 auf 2.2
+Nov 10 19:11 1992  
+
+    Version fuer 2 Transputer
+    Feste Konfiguration (in k_seq festgelegt)
+    u_glob wird flachgeklopft und weitergegeben
+    Alle 4. erzeugten Knoten wird einer abgegeben an Nachbarn
+    Termination-Detection verteilt ueber Token-passing
+    Kanal-Protokoll jetzt zweiteilig: type/item
+    Tracing jetzt konsequent mit Zeitangaben
+    Tracing allgemein verbessert, Werte in Knoten aussagefaehiger
+    Viele ueble Bugs beseitigt !
+
+Neue Files:
+    sbb.1.cfs		Konfiguration fuer 1-Transputer, 1 System
+    sbb.2.cfs		Konfiguration fuer 2-Transputer, 2 Systeme
+    sbb.cfs		Auf sbb.1.csf oder sbb.2.cfs gelinkt
+    todo		Anmerkungen und Wunschliste fuer Aenderungen
+    trace.channel	k_seq-Anteil fuer Trace-Weitergabe ueber Kanaele
+
+Gleichgeblieben:
+    e_seq.h
+    inout.h
+    k_seq.h
+    k_types.h
+    m_seq.h
+    matrin.h
+    mkmatr.c
+    u_types.h
+
+e_seq.c:
+    Feststellung, dass Heap leer, jetzt ueber Q_PARTNER_DEAD
+    Expander beendet nicht mehr den Memserver (wieso auch ?)
+    Tracing verkuerzt (ueberfluessige Meldungen weg)
+    Tracing spaeter bzw. mit extra Berechnungen wg. korrekten Werten
+    value ueberfluessig (weg damit !)
+    TV-Meldung nachgebessert
+
+error.h:
+    misc.h wird included (wieso denn ?)
+    FEHLER() macht exit_terminate statt exit
+
+h_seq.h:
+    globale Variable parallel wird ausgewertet
+    cpu_nr wird uebergeben
+    sts wird initialisiert (war uebler bug !!)
+    counter beginnt bei cpu_nr (recht wahllos)
+    Termination Detection aufgebaut:
+	idle
+	i_have_a_token
+	token_creator
+	sent_work
+	next_in_ring
+    Tracing verbessert (Jede Veraenderung ausser Expander)
+    Incumbents vom Expander werden nur bedingt weitergegeben
+    Incumbents von In werden weitergegeben
+    Leerer Heap setzt zunaechst nur idle auf TRUE
+    outstanding bei in/out geloescht (uebler bug !)
+    Eingehender Knoten loescht idle
+    eingehendes Token wird registriert
+    eingehendes Finish wird weitergegeben, dann h_finished gesetzt
+    ausgehende Knoten setzen sent_work
+    h_put_on_heap nach erfolglosem Verschicken korrigiert (uebel)
+    Wenn idle, wird Token bearbeitet (-> TD-Entwurf)
+    Wenn nicht parallel, fuehrt bereits idle zum Abbruch
+
+h_seq.h:
+    cpu_nr als Parameter aufgenommen
+
+inout.c:
+    out:
+	q_item als eigene Variable 
+	keep_node-Flag als Workaround fuer Incumbent-Problematik
+	Typ der Flat-Nodes aus flat_node herausgenommen
+	Verschiedene Behandlung der Items in der Queue, je nach type
+	    Incumbents werden behalten
+	    Alle Nodes werden flachgeklopft
+	    Tokens und Finishes werden direkt verschickt
+	Verschicken in zwei Schritten: type/item
+    in:
+	dummy eingefuehrt, um type nicht zu ueberschreiben (uebel)
+	Typ der Flat-Nodes aus flat_node herausgenommen
+	Lesen vom Kanal in zwei Schritten: type/item
+	Verschiedene Behandlung der eingegangenen Items:
+	    Knoten werden ausgepackt
+	    Token und Finishes werden direkt empfangen
+
+k_seq.c:
+    misc.h wird included (wieso ?)
+    STACK_SIZE fuer alle Prozesse hochgesetzt auf 8192
+    parallel als neue Variable
+    u_glob jezt kein Zeiger mehr
+    Neue variablen:
+	u_glob_chan
+	flat_u_glob
+	flat_u_size
+	cpu_nr
+	cpu_nr_p
+	trace_buf_size
+	j
+    cpu_nr und in/out_channel[0] aus .cfs gelesen (provisorisch)
+    Queues werden erst angelegt (wg. Tracer-Queues)
+    Wenn nicht parallel, wird Kanal soft allokiert (in = out)
+    Unterscheidung root-slave: u_glob verschicken/empfangen
+    Nur root macht Startknoten und Anfangsincumbent
+    u_node von Incumbent wird halbwegs initialisiert (uebler bug)
+    Heapserver jetzt mit 8 Argumenten gestartet
+    Alle anderen mit expliziter Stack-Groesse
+    Tracer-Queues werden nur bis tt geleert
+    Zeit und Herkunft der Trace-Messages wird ausgegeben
+    Ausgabe von Loesung etc. abhaengig von root/slave
+    Am Ende exit_terminate statt exit
+
+m_seq.c:
+    Tracing-Format korrigiert
+
+makefile:
+    sbb.lku in SRC, nicht in OBJ
+    icconf auch nach Aenderungen an sbb.lku neu (?)
+    icollect jetzt ueber sbb.cfb, kein -t mehr
+    sbb.cfb als neues Target eingefuehrt
+
+matrin.c:
+    Neue variable mat_buf
+    Matrixkoerper wird am Stueck allokiert
+
+queue.c:
+    Blockierende Funktionen liefern Q_PARTNER_DEAD als Status
+
+queue.h:
+    neuer Fehler: Q_PARTNER_DEAD
+    neue Item-Typen: Q_TOKEN, Q_FINISH
+
+trace.c:
+    Zeit-Ausgabe uebernimmt jetzt k_seq
+    terminierende FIXED-Ausgabe eingefuehrt (auskommentiert)
+    Kleinere Formatverbesserungen der printfs
+
+trace.h:
+    TRACE_BUF_SIZE von 512 auf 1024 hochgesetzt
+
+u_tsp.c:
+    qm als statische Matrix eingefuehrt (Bullshit, weg damit)
+    u_init_glob bekommt jetzt u_glob_t* statt **
+    u_sizeof_flat_node statt u_sizeof_flat
+    u_flat_glob und u_unflat_glob neu
+
+u_tsp.h:
+    u_init_glob bekommt jetzt u_glob_t* statt **
+    u_sizeof_flat_node statt u_sizeof_flat
+    u_flat_glob und u_unflat_glob neu
+
+
+
+
+readme.22r
+--------------------------------------------------
+Nach 2.2 wurde eine umfangreiche Umbenennung von Dateien
+durchgefuehrt, leider ohne eigene Versionsnr.
+
+Dieses Verzeichnis enthaelt die unveraenderten Files aus 2.2 
+mit neuen Namen, um einen Vergleich mit 3.0 zu ermoeglichen
+
+Files, die nach 2.2 gesplittet wurden, tauchen hier 
+unter beiden neuen Namen komplett auf, um halbwegs
+aussagekraeftige diffs zu erhalten
+
+Umbenennung erfolgte (jetzt) mit Hilfe von
+rename.sh
+
+
+
+
+readme.30
+--------------------------------------------------
+Veraenderungen von 2.2renamed auf 3.0
+
+Jan  7 19:27 1993 
+
+Erste echte Paralellversion fuer mehr als 2 Transputer
+enthaelt (leider) sowohl eine groessere Umbenennung (-> 2.2renamed)
+als auch inhaltliche Veraenderungen:
+    Heap- und Disp-Zeug getrennt
+    Typ-Funktionen aus u_tsp ausgegliedert
+    Diverse Namen veraendert
+    Parameter ueber Kommandozeile und Parameterdatei moeglich
+    nicht mehr stdin, sondern Datei wird gelesen
+    icconfig-Parameter werden interpretiert
+    Bedingtes Tracing ueber Parameter schaltbar
+    Expander lehnt Knoten ab, wenn schlechter als letzte Generation
+    u_glob wird weitergegeben bis zu letztem
+    makefile entschieden abgespeckt
+
+Neue Files:
+    param.c		Testprogramm fuer Lesen der Parameterdatei
+    sbb.4.cfs		Knofigurationsprogramm fuer 4 Transputer
+
+gleichgeblieben:
+    mkmatr.c
+    sbb.1.cfs
+    trace.channel
+    tsp_trace
+
+prinzipiell gleichgeblieben (bis auf Umbenennungen):
+    expand.h
+    inout.h
+    mem.h
+    startup.h
+    trace.c
+
+grundsaetzliche Aenderungen:
+    alles Dispatcher-Zeug heisst disp*, d* ...
+    k_ - Vornamen entfallen, bzw. einiges k_Zeug heisst jetzt s_
+
+disp.c:
+    enthaelt Dispatcher-Code aus h_seq.c
+    bedingtes Tracing eingefuehrt
+    Ablehnung von Knoten durch Expander eingebaut
+    Rundum-Lauf bei Weitergeben angeschaltet (war auskommentiert)
+    Dispatcher endet, wenn m oder e starben, mit PARTNER_DEAD
+
+disp.h:
+    Uebernimmt Deklarationen aus h_seq.h
+    Neue Fehlermeldung D_DONE
+
+error.h:
+    misc.h auskommentiert (wozu war das gleich ?)
+    Fehler umbenannt
+    TRACE-Conditions eingefuehrt
+    
+expand.c:
+    ehemals e_seq.c
+    bedingtes Tracing eingefuehrt
+    Ablehnung von Knoten eingebaut
+    
+expand.h:
+    ehemals e_seq.h
+
+heap.c:
+    Enthaelt nur noch das Heap-Zeug aus h_seq.c
+    bedingtes Tracing eingefuehrt
+    Alle Heap-Funktionen jetzt public
+
+heap.h:
+    Enthaelt nur noch das Heap-Zeug aus h_seq.h
+    Alle Heap-Funktionen jetzt public
+
+inout.c:
+    included nicht mehr u_tsp.h (wieso auch ??)
+    bedingtes Tracing eingefuehrt
+
+inout.h:
+
+makefile
+    Kuerzere Namen eingefuehrt (keine Verzeichnisse mehr drin)
+    kein Extraverzeichnis fuer Includes
+    Dependencies nachgesehen und verbessert (sollten stimmen...)
+
+mem.c:
+    ehemals m_seq.c
+    included nicht mehr u_tsp.h (wieso auch ??)
+    bedingtes Tracing eingefuehrt
+    kommentierter Unsinn ueber Second-Time (provoziert Fehler, zum Test)
+
+mem.h:
+    ehemals m_seq.h
+
+queue.c:
+    included jetzt error.h
+
+queue.h:
+    Neuer Item-Typ Q_REJECT
+
+read.c:
+    enthaelt frueheres matrin.c plus Parameter-Stuff
+    enthaelt eigene Fehlercodes (?)
+    included nicht mehr error.h
+    Kommentare erweitert
+    Funktion readline auf gemeinsame Beduerfnisse von Matrix und 
+	Parameterdatei angepasst
+    merkwuerdiges Fehlermakro FAIL (?)
+    neue Funktionen
+	read_param
+	init_params
+
+read.h:
+    Stuff aus matrin.h, plus neue Deklarationen
+
+sbb.cfs.1:
+    ????
+
+startup.c:
+    ehemals k_seq.c
+    bedingtes Tracing eingefuehrt
+    neue Funktion init_glob (initialisiert bisher nur trace-Flags)
+    in/out_channel als Channel** statt *channel[4] (wg.  icconf-Datei)
+    Parameter aus icconf-Datei werden ausgewertet
+    Parameterdatei wird gelesen
+    Reihenfolge der Initialisierungen veraendert (wg. Tracing)
+    kommentierter Unfug fuer Channel-Belegungstest
+    u_glob-Stuff wird weitergegeben (war BUG !!)
+    Endebedingung veraendert (terminate nur fuer root)
+    rejected in Statistik aufgenommen
+
+startup.h:
+
+todo:
+    erledigt bzw. rausgenommen:
+	Parameterfile incl Funktion zum Lesen einfuehren
+	Alle Typorientierten Angelegenheiten aus u_tsp
+	    in eigenem u_types.c zusammenfassen
+    Vorhaben:
+	SC64
+	u_zf_t
+	wie gut ist rejecting ?
+	Memory overflow ?
+	wieso [em]-finished-Check in disp ?
+	Prio-Profil
+
+trace.c:
+
+trace.h:
+    alle Trace-Makros von Trace-Condition abhaengig gemacht
+
+types.h:
+    ehemals k_types.h
+    rejected in Statistik aufgenommen
+    glob_t neu
+
+u_tsp.c:
+    der Unfug mit konstanter Matrix ist verschwunden (thank god...)
+    die Datentyp-Funktionen jetzt in u_types.c
+    u_init_glob verwendet Filenamen aus Parameter
+    deswegen neue Fehlercodes
+
+u_tsp.h:
+    kein U_MALLOC mehr moeglich, dafuer U_PARAM und U_FILE
+
+u_types.c:
+    Neu, enthaelt jetzt die Typ-Funktionen aus u_tsp.c
+
+u_types.h:
+    Neu, uebernimmt die Deklarationen aus u_tsp.h fuer Typ-Funktionen
+
+
+
+
+readme.31
+--------------------------------------------------
+Veraenderungen von Version 3.0 auf 3.1
+Feb 10 17:49 1993  
+
+Nachtraeglich erstellter dircmp, Version scheint v. 21.1.93 zu sein
+
+Strategie in eigenes Modul ausgelagert, aber noch mod-k
+Viele neue Parameter fuer Heuristik und Verteilung
+Bugs: Falsche Queue bei try_pruning, Loesungen mit unklarer Markierung
+Statistik-Kaskade am Ende
+Profil der L-Bounds bei Statistik
+I/O findet nur auf der Wurzel statt, aber andere iserver noch noetig
+
+Gleichgeblieben:
+    disp.h
+    expand.h
+    inout.h
+    mem.c
+    mem.h
+    mkmatr
+    mkmatr.c
+    queue.c
+    read.c
+    read.h
+    sbb.2.cfs
+    sbb.4.cfs
+    startup.h
+    todo
+    trace.c
+    trace.h
+    tsp_trace
+    u_tsp.h
+    u_types.c
+    u_types.h
+
+disp.c:
+    Neue Funktion to_all_neighbors() vereinfacht Broadcasting
+    Strategie wird durch make_distrib() eingefuehrt
+    Dafuer diverse neue Felder (last_heard_from, ...)
+    counter wird jetzt fortlaufend gefuehrt
+    idle-Pakete werden verschickt
+    Neuer Parameter DIST_COUNT_FATHERS
+
+error.h:
+    Viel Kosmetik
+    Neue Parameter START_HEUR, SINGLE_CPU, DIST_COUNT_FATHERS,
+	PROFILE, ONE_HOST_CHAN
+
+expand.c:
+    Profiling wird gefuehrt
+    Uebler Bug: try_pruning erhielt falsche Queue
+    Heuristik ueber Parameter schaltbar
+
+heap.c:
+    Neue Funktionen h_get_best_prio() und h_heap_size()
+    Heapsize wird fortlaufend gefuehrt
+
+heap.h:
+    Deklarationen fuer die neuen Funktionen
+
+inout.c:
+    bei in und out fuehrt der Empfang v. Q_FINISH zum Abbruch
+
+makefile:
+    auf t805 umgestellt
+
+queue.h:
+    neuer Typ Q_IDLE
+
+sbb.cfs:
+    Aenderungen im Interface (Topologie unueberschaubar)
+
+startup.c:
+    Default-Parameterwerte eingefuehrt
+    print_stat() nimmt jetzt ein Argument
+    node heisst jetzt startnode (?)
+    Puffer fuer Statistik eingefuehrt
+    parallel wird aus nr_of_cpus bestimmt
+    Soft-Channels zum Testen jetzt rausgenommen
+    Anfangsloesung jetzt optional mit Heuristik (Parameter)
+    Anfangsloesung wird klar als Loesung markiert (free, fixed, depth)
+    Nach dem Ende wird auf Statistik-Kaskade gewartet
+    Alle Statistiken werden an der Wurzel ausgegeben
+    Statistikausgabe veraendert
+    print_stat() berechnet auch die Skalierung des Profils
+    in init_glob() werden alle neuen Parameter gelesen
+
+
+types.h:
+    Werte fuer Profiling und dist_interval in glob eingefuegt
+
+u_tsp.c:
+    in u_heur_loes() wird Loesung klar als solche markiert (free, depth)
+
+
+
+
+readme.311
+--------------------------------------------------
+Nicht lauffaehige Version mit kopierten incumbents im Dispatcher, um
+auch Incumbent-Knoten in inout freigeben koennen.
+
+Aenderung zurueckgestellt weil zu kompliziert und von geringem
+Nutzen.
+
+Incumbent-Knoten versickern jetzt in inout. (So what ?)
+
+
+
+
+readme.315
+--------------------------------------------------
+
+Mon Feb  8 21:00:05 MET 1993
+
+Erster Lauf mit 32 Transputern geglueckt.
+Fehlt noch der Einbau von
+    reduced l_bound
+    mem-leak-fix
+    use-char-for-index
+
+
+
+
+readme.32
+--------------------------------------------------
+Aenderungen von Version 3.1 auf 3.2
+
+Feb 10 18:22 1993  
+
+Laeuft zum ersten Mal auf bis zu 64 Transputern (mod n/4 cube)
+Abhaengigkeit von extra-iservern beseitigt
+div. Fehler korrigiert (mem-leak, stack-check, End-0 bei Q-Arrays)
+Kein Rejecting mehr
+Gueteabhaengige Strategie
+Prioritaet durch Parameter schaltbar
+Zeitmessung, mehr Statistik (sent, got, idle)
+reduzierte Lower Bound
+Byte-Felder in u_nodes
+u_tsp gut kommentiert
+
+Neue Dateien:
+    Verzeichnis btl mit 1/2/4-Konfiguration fuer sibelius
+    Verzeichnis cfs mit altem Zeug
+    Verzeichnis sc64 mit 1/2/4/8/16/32/64-Konfiguration fuer i90fs1
+    fake_io.c: Zum Linken der Reduced Library
+
+
+Gleichgeblieben:
+    disp.h
+    error.h
+    expand.h
+    heap.c
+    heap.h
+    inout.h
+    mkmatr
+    mkmatr.c
+    queue.c
+    read.c
+    read.h
+    startup.h
+    todo
+    trace.c
+    trace.h
+
+
+disp.c:
+    idle_timer wird nach erster Aktivitaet gefuehrt
+    Rejecting ausgebaut, stattdessen wartet disp auf leeren Vater
+    Schleife fuer Knotenempfang nur auf aktiven Queues
+    Statistik fuer verschickte und erhaltene Knoten wird gefuehrt
+    Strategieschleife hat etwas verschaerfte Bedingung
+    Schleife fuer Knotenbroadcast nur auf aktiven Queues
+    Strategie veraendert, jetzt mit HI, LO und IDLE
+
+expand.c:
+    Rejecting ausgebaut
+    Ueblen Bug gefunden: Speicherleck durch doppelte Sohn-Allok.
+    u_priority erhaelt neuen Parameter prio_par
+    statistic.heur_solved wird in expand gefuehrt
+
+inout.c:
+    Nur ein Test in Kommentaren (ProcAlt)
+
+makefile:
+    Flag fuer Stack-Check entfernt (Puuuh...)
+    Komplette Saetze fuer sc64 und sibelius
+    Reduced Library eingefuehrt
+
+mem.c:
+    Memserver erhaelt jetzt auch Max-Level
+    Queues werden nach Level ueberwacht jeweils vollstaendig geleert
+    Tracing eingefuehrt
+    Zeitscheibe wird nach jeder Runde abgegeben
+
+mem.h:
+    maxlevel eingetragen fuer memserver
+
+queue.h:
+    Q_REJECT fliegt raus, dafuer Q_IDLE
+
+startup.c:
+    Neue Parameter PRIO_PAR und DIST_{LOW/HIGH/IDLE}
+    Mit Defaults
+    time.h wird included
+    Arraygrenzen fuer Queues und link_connected erhoeht (Bug bei 4 )
+    timer wird mitgefuehrt (momentan 2, aber nur z. Test)
+    memserver bekommt Obergrenzen
+    Viele Ueberreste von Fehlersuche mit QQQ !!!
+    Statistik-Format mal wieder veraendert
+    Neue Parameter werden eingelesen in init_glob()
+
+types.h:
+    Neu in glob:
+	dist_{low/high/idle}, prio_par
+    Neu in statistic:
+	got, sent, time, idle
+
+u_tsp.c:
+    included nicht mehr types.h
+    fuehrt keine Statistik mehr selbst
+    u_priority erhaelt para
+    Alle int-Felder mit Indizes sind jetzt byte-Felder
+    Neue Funktionen getrsmin und getrzmin fuer reduzierte Bounds
+    Kommentare komplett ueberarbeitet auf generische Trennung
+    u_lower_bound berechnet jetzt reduzierte Bounds
+    Prioritaet nach neuer Formel berechnet
+
+u_tsp.h:
+    para in u_priority eingefuegt
+
+u_types.c:
+    Alle int-Felder mit Indizes jetzt byte-Felder
+
+u_types.h:
+    Typ byte eingefuehrt
+    Aenderung von u_node_t auf byte-Listen
+
+
+
+
+readme.325
+--------------------------------------------------
+Aenderungen von 3.2 auf 3.25
+Mar  1 23:52 1993 
+(Nachtraeglich erstellt, 3.25 offenbar vom 16.Februar)
+
+Nur 1 wesentliche Aenderung, die sich ueberall durchzieht:
+Keine problem_size mehr, statt dessen u_glob->size
+
+Gleichgeblieben:
+    .make_all
+    disp.c
+    disp.h
+    error.h
+    expand.h
+    fake_io.c
+    heap.c
+    heap.h
+    makefile
+    mkmatr
+    mkmatr.c
+    queue.c
+    queue.h
+    read.c
+    read.h
+    sc64/conf
+    startup.h
+    tags
+    todo
+    trace.h
+    types.h
+    u_tsp.h
+
+expand.c:
+    problem_size raus
+
+inout.c
+    ganze u_glob statt size wird uebergeben
+
+inout.h
+    dito
+
+mem.c:
+    dito
+    m_init_mem und m_get_node bekommen auch u_glob
+
+startup.c:
+    dito
+
+trace.c
+    problem_size raus
+
+u_tsp.c:
+    Alle Funktionen erhalten u_glob
+    dafuer kein problem_size mehr
+
+u_types.c:
+    dito
+    entsprechende Aenderungen bei flacher u_glob
+
+u_types.h:
+    u_glob enthaelt jetzt size
+
+
+
+
+readme.33
+--------------------------------------------------
+Aenderungen von 3.25 auf 3.3
+Mar  2 00:08 1993 
+(nachtraeglich erstellt, wahrscheinlich 3.3 vom 16.2. (??))
+
+Gleichgeblieben:
+    .make_all
+    disp.h
+    expand.h
+    fake_io.c
+    heap.c
+    heap.h
+    ic.so
+    inout.h
+    mem.h
+    mkmatr
+    mkmatr.c
+    queue.c
+    queue.h
+    startup.h
+    trace.h
+    types.h
+
+disp.c:
+    included time.h
+
+error.h:
+    Fehlernummern fuer U_FUNCS
+
+expand.c:
+    included u_funcs.h statt u_tsp.h
+    Ueberfluessige variablen weg
+    Fehler gefunden: Griff auf u_node zu
+
+inout.c:
+    included u_funcs.h statt u_tsp.h
+
+makefile:
+    scp und tsp integriert mit PROB
+
+mem.c:
+    included u_funcs.h statt u_tsp.h
+
+read.c:
+    kl_input() fuer Kantenlisten-Eingabe neu
+    FAIL anderer Status
+
+read.h:
+    dito
+
+startup.c:
+    included u_funcs.h statt u_tsp.h
+    u_glob wird von u_init_glob() allokiert wg. generischer Typen
+    solution nicht mehr intern geaendert => START_HEUR obligatorisch
+
+u_tsp.c:
+    u_glob wird von u_init_glob() allokiert wg. generischer Typen
+    u_types - Funktionen hier integriert
+
+u_types.h
+    generische Fassung mit void
+
+
+
+
+readme.335
+--------------------------------------------------
+Aenderungen von 3.3 auf 3.35
+
+different	./disp.c
+different	./expand.c
+different	./heap.c
+different	./makefile
+different	./q
+different	./startup.c
+different	./types.h
+different	./u_tsp.c
+
+disp.c:
+    Verteilungsstrategie ohne make_distrib(), zu Fuss
+    MIN_HEAP_SIZE eingefuehrt
+
+expand.c:
+    Soehne bekommen ihren Vater eingetragen, wenn sie entstehen
+
+heap.c:
+    LIFO-Stack und Binaerbaum eingebaut
+
+startup.c:
+    MAX- und MIN_HEAP_SIZE
+    Verbesserungen von Fehlern bei DEF_DIST-stuff
+    Statistik angepasst
+
+types.h:
+    Diverse Veraenderungen an Statistik
+
+u_tsp.c:
+    Bei para = 0 wird Tiefe als sekundaeres Kriterium genommen
+
+
+
+
+readme.40
+--------------------------------------------------
+Aenderungen von 3.35 auf 4.0
+
+Feb 26 02:13 1993  
+Nachgebessert am 2.3.93 
+
+Komplett neue Fehlerbehandlung ueber Tokens im Netz
+Ausgabe von Fehlern verbessert
+Fehler (heap_loop, l_bound-Eintrag, reached-init) verbessert
+Reservehaltung bei mem, automatische Umschaltung auf LIFO
+Statistik besser konfigurierbar von aussen
+
+Gleichgeblieben:
+same     	./mkmatr.c
+same     	./scp.cfs
+same     	./set.h
+same     	./tsp.cfs
+
+Neu:
+    para: Bessere (kommentierte) Darstellung der Parameter
+    Error.txt: Konzept fuer die neue Fehlerbehandlung
+    Generic.txt: Konzept fuer generische module
+
+Ueberall:
+    kleine Verbesserungen wg. Warnings, unused variables, =, ...
+    Tracing abgeschaltet
+
+disp.c:
+    min_level bei disp weggenommen
+    outstanding kann nicht durch Fehlertokens < 0 werden
+    make_distrib fehlt
+    wenn Leerknoten an Memserver geht,fuehrt sts nicht mehr zu d_fin.
+    bei Expander-Ausgabe Q_ERROR bearbeiten
+    falsche Knoten v. Expander setzen sts, nicht d_finished
+    idle-broadcast wird mit Status abgefragt
+    bei In-Schleife wird Q_ERROR bearbeitet
+    falscher Knoten von In setzt sts, nicht d_fin.
+    Ueberpruefung der Partner (M und E) am Ende entfaellt
+    zusaetzliches B_ST ans Ende der Schleife
+    nach der Schleife wird nur sts geprueft, nicht d_finished
+    Fehler in sts werden auf jeden Fall an out[0] weitergegeben
+
+error.h:
+    ONE_HOST_CHAN fehlt
+    dafuer STATISTIC, STAT_SUMS, STAT_KEEP und NO_SOLUTION
+    Fehlercodes direkt hier deklariert
+    P_FEHLER: Neue Ausgabe bei Fehlermakros
+
+expand.c:
+    Fehlerabfragen bei memserver beachten auch type
+    Keine Fehlerabfragen bei Dispatcher
+    Fehlerabfrage nach der Schleife jetzt auf > ERROR statt != OK
+    Expander beendet sich gar nicht mehr selbst
+    Statt dessen wird Fehlertoken an Dispatcher geschickt
+    u_selection_t weg
+
+heap.c:
+    Uebler Fehler: heap->rightson->leftson == 0 bei leerem Heap !!
+    (Damit loopt new_incumbent)
+
+inout.c:
+    out:
+    out hat kein sts mehr
+    wenn anfaengliche Allokierung nicht klappt, kommt return statt exit
+    Schicken an M wird nicht auf sts abgefragt
+    Falsche Knoten werden nicht mehr abgefangen
+    Q_ERROR wird bearbeitet: verschicken, selbst und disp beenden
+    Fehlerabfrage am Schleifenende fehlt
+    in:
+    beim Anfang von in Fehler korrigiert: in statt out
+    Fehler von M werden nur an disp weitergegeben, selbst ignoriert
+    Fehler von disp werden ignoriert
+    Falsche Knoten werden nicht mehr moniert
+    Q_ERROR wird verarbeitet: an disp, selbst beenden
+    Am Ende keine Fehlerabfrage mehr noetig
+
+makefile:
+    Neues Namenskonzept, erlaubt maken aller Versionen ohne Aenderung
+
+mem.c:
+    included misc.h (unnoetig)
+    Reserve wird am Anfang allokiert, fuer LIFO
+    Fehlerabfrage bei m_get_mem geaendert:
+    Wenn einmal out of mem, werden Fehlertokens verschickt
+    Keine Fehlerabfrage mehr abgesehen davon
+    Nur echte Nodes werden gefreet (keine Fehlertokens)
+    Fehlerprovokation in m_get_node (auskommentiert)
+
+queue.h:
+    Q_ERROR neu
+
+read.c:
+    Andere Reaktionen bei Fehlern
+    Fehler entdeckt: reached[] wurde nicht initialisiert
+
+startup.c:
+    #defines raus nach startup.h
+    timer2 weg
+    Statistik-Struktur wird mit 0 initialisiert
+    START_HEUR nicht mehr ausgewertet, immer true
+    Entscheidung fuer Statistik-Kaskade jetzt von D_DONE und
+	STAT_KEEP abhaengig
+    unzaehlige Kommentare entfernt bzw. verbessert
+    print_stat von STATISTIC abhaengig gemacht
+    mehr Statistikparameter werden aufsummiert
+    Durchschnittswerte werden gebildet
+    Summen werden ueber STAT_SUMS gesteuert
+    Es werden nur in/out[1..3] beendet
+    Nur wenn kein Fehler, auch in[0] beenden, sonst darauf warten
+    Ausgabe der Loesung von NO_SOLUTION abhaengig
+    Bei Fehler wird erst ausgegeben, dann auf in[0] gewartet
+    print_stat angepasst, mehr Summen, bessere Ausgabe
+    print_error() neu
+    neue Parameter in init_glob eingetragen
+
+types.h:
+    reserve_size in glob
+
+u_funcs.h:
+    Fehlernummern hier U_FUNCS_ERR - x, sollte aich ausgewertet
+	werden QQQ
+
+u_tsp.c:
+    l_bound wird in node am Ende eingetragen
+
+
+
+
+readme.41
+--------------------------------------------------
+Aenderungen von 4.0 auf 4.1
+Fri May  7 18:17:01 MET DST 1993
+
+Neue Files:
+    conf.circle		: Frueher conf
+    conf.torus		: Erzeugt Torus-dsc mit verschiedenen Params
+    mk_msp.c		: Erzeugt MSP-Probleme
+    mk_scp.c		: Frueher mkkl.c
+    mk_tsp.c		: Frueher mkmatr.c
+    trace.c		: Generische Trace-Funktionen, verwendet 
+			  u_trace_node () aus u_???.c
+    u_msp.c		: Instanzfunktionen fuer MSP
+    u_msp_types.h	: Typ-Instanzen fuer MSP
+    ... und einen kompletten Satz neue Konfigurationen fuer Tori
+
+Gleichgeblieben:
+
+    disp.h
+    error.h
+    expand.c
+    expand.h
+    fake_io.c
+    heap.h
+    inout.c
+    inout.h
+    mem.c
+    mem.h
+    queue.c
+    queue.h
+    read.h
+    set.c
+    set.h
+    trace.h
+    u_scp_types.h
+    u_tsp_types.h
+    u_types.h
+
+Weggefallen:
+    u_???_trace.c
+
+disp.c:
+    just_sent_to wird initialisiert (Puuhhh...)
+    sent_work wird auch nach Broadcast gesetzt
+    Bei Verteilung wird nicht auf idle, sondern heap_size abgefragt
+
+heap.c:
+    h_get_best_prio () prueft auch den LIFO-Stack, wenn Heap leer
+
+makefile:
+    Umstellung auf Kernel-Library
+    neue Konfigurationen hinzugefuegt
+    msp hinzugefuegt
+    Trace-Aenderungen fuehren zu Wegfall von u_???_trace.c
+
+para:
+    START_HEUR rausgenommen
+
+read.c:
+    init_params () liefert jetzt OK
+
+startup.c:
+    last_in_ring wird von icconf mitgeliefert (nicht mehr n-1)
+    ring_in und ring_out als Variablen eingefuehrt (wg. 2)
+    statistic.cpu_nr wird gesetzt
+    Queue-Groessen ueber startup.h einstellbar
+    Memserver-Level ebenfalls ueber startup.h
+    Statistik wird nach cpu_nr numeriert
+    Benutzerfehler bis U_MALLOC werden direkt ausgegeben
+
+startup.h:
+    Default-Werte angepasst
+    Queue-Groessen und Memserver-Level hier einstellbar
+
+types.h:
+    cpu_nr in statistic eingefuegt
+
+u_funcs.h:
+    Schwachsinnige negative Fehlernummern rausgeworfen
+    Neue Instanzfunktion u_trace_node ()
+
+u_scp.c:
+    Neue Instanzfunktion u_trace_node ()
+    Neue Heuristik (fehlt in DIRCMP.4.1)
+    Dafuer compare_val () zum Sortieren
+    
+u_tsp.c:
+    getr[zs]min statisch gemacht
+    Neue Instanzfunktion u_trace_node ()
+
+
+
+

@@ -1,0 +1,6 @@
+Dieses Verzeichnis enthaelt die Testprobleme fuer verschiedene
+Instanzen, mit denen alle in der Arbeit beschriebenen Tests
+durchgefuehrt wurden. 
+
+scp/		Probleme fuer das SCP
+tsp/		Probleme fuer das TSP

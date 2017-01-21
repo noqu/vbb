@@ -1,0 +1,7 @@
+Dieses Verzeichnis enthaelt alle Testprobleme und die fuer die Tests
+verwendeten Einstellungen fuer das Traveling Salesman Problem (TSP). 
+
+TSPs/		Testprobleme TSP1 bis TSP10
+dist/		Tests fuer die Verteilungsstrategie 
+heur/		Tests fuer die Suchstrategie (Lambda) und Heuristik
+speedup/	Tests zum Speedup

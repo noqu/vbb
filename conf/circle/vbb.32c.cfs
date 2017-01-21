@@ -1,0 +1,228 @@
+/* @PROB@.n.cfs */
+/* Konfiguration fuer n Transputer (n aus [1, 2, 3, 4, 8]) */
+/* fuer Supercluster mit T800 je 4 MB */
+
+/* Folgende Zeile auskommentieren fuer icc auf sibelius */
+/* #include "setconf.inc" */
+
+val	n		32;	/* Anzahl Transputer	*/
+val	nr_of_links	4;	/* Anzahl verwendeter Links */
+val	p		0;
+
+processor (type = "T800", memory = 4M) transp[n];
+
+/* Baue Kreis auf (ohne Schlussglied): */
+rep i = 0 to n - 2
+   {
+    connect transp[i].link[1] to transp[i + 1].link[2];
+   }
+
+/* Bei drei Transputern wird Kreis anders geschlossen: */
+if (n == 3)
+   {
+    connect transp[2].link[3] to transp[0].link[3];
+   }
+
+/* Bei vier Transputern normal schliessen und Kreuz dazu: */
+if (n == 4)
+   {
+    connect transp[3].link[1] to transp[0].link[2];
+    connect transp[0].link[3] to transp[2].link[3];
+    connect transp[1].link[3] to transp[3].link[3];
+   }
+
+/* Bei 8 Transputern normal schliessen und 2 Kreuze (provisorisch) */
+if (n == 8)
+   {
+    connect transp[7].link[1] to transp[0].link[2];
+    connect transp[0].link[3] to transp[4].link[3];
+    connect transp[1].link[3] to transp[5].link[3];
+    connect transp[2].link[3] to transp[6].link[3];
+    connect transp[3].link[3] to transp[7].link[3];
+   }
+
+if (n == 16)
+   {
+    connect transp[15].link[1] to transp[0].link[2];
+    rep i = 1 to 15
+       {
+	connect transp[i].link[0] to transp[(i + 4) % 16].link[3];
+       }
+   }
+
+if (n == 32)
+   {
+    connect transp[31].link[1] to transp[0].link[2];
+    rep i = 1 to 31
+       {
+	connect transp[i].link[0] to transp[(i + 8) % 32].link[3];
+       }
+   }
+    
+/* Root-Transputer an Host anschliessen: */
+connect transp[0].link[0] to host;
+
+/* Interface festlegen fuer root Prozess: */
+if (n == 1)
+   {
+    /* Braucht einen Dummy-Kanal, geht sonst nicht wg. Syntax: */
+    define process (heapsize = 3850K, stacksize = 100K, 
+	     interface (input	from_server,
+			output	to_server,
+			int	cpu_nr,
+			input	in[1],
+			output	out[1],
+			int	nr_of_chans = 0,
+			int	nr_of_cpus = 1)
+	    )root_proc;
+   }
+else
+   {
+    define process (heapsize = 3850K, stacksize = 100K, 
+	     interface (input	from_server,
+			output	to_server,
+			int	cpu_nr,
+			input	in[nr_of_links],
+			output	out[nr_of_links],
+			int	nr_of_chans,
+			int	nr_of_cpus = n)
+	    )root_proc;
+   }
+
+/* Interface festlegen fuer Slave Prozesse: */
+if (n > 1)
+   {
+    /* Slave hat dummies statt Host-Channels: */
+    define process (heapsize = 3850K, stacksize = 100K, 
+	     interface (int	dummy1 = 0,
+			int	dummy2 = 0,
+			int	cpu_nr,
+			input	in[nr_of_links],
+			output	out[nr_of_links],
+			int	nr_of_chans,
+			int	nr_of_cpus = n)
+	    )slave_proc;
+   }
+
+
+/* Prozesse Root und Slaves definieren: */
+
+if (n >= 16)
+    root_proc	(cpu_nr = 0, nr_of_chans = 3) root;
+else
+    root_proc	(cpu_nr = 0, nr_of_chans = nr_of_links) root;
+
+if (n > 1)
+   {
+    slave_proc	             slave[n - 1];
+   }
+rep i = 0 to n - 2
+   {
+    if (n == 16 && i == 3)
+	slave[i] (cpu_nr = i + 1, nr_of_chans = 3);
+    if (n == 32 && i == 7)
+	slave[i] (cpu_nr = i + 1, nr_of_chans = 3);
+    else
+	slave[i] (cpu_nr = i + 1, nr_of_chans = nr_of_links);
+   }
+
+/* Verbindungen zur Aussenwelt definieren:: */
+input	host_inp;
+output	host_outp;
+
+/* Root an Host anschliessen: */
+connect root.from_server 	to host_inp;
+connect root.to_server 	to host_outp;
+
+/* Soft-Kanaele zwischen Transputern verbinden: */
+if (n > 1)
+   {
+    connect	root.out[0]	to slave[0].in[1];
+   }
+if (n > 2)
+   {
+    connect	root.in[0]	to slave[0].out[1];
+   }
+rep i = 0 to n - 3
+   {
+    /* Kreis wird mit out[0]/in[1] gebildet: */
+    connect	slave[i].out[0]	to slave[i + 1].in[1];
+    /* gegenlaeufiger Kreis aus out[1]/in[0] */
+    connect	slave[i].in[0]	to slave[i + 1].out[1];
+   }
+if (n > 1)
+   {
+    connect	slave[n - 2].out[0]	to root.in[1];
+   }
+if (n > 2)
+   {
+    connect	slave[n - 2].in[0]	to root.out[1];
+   }
+/* Bei vier Transputern Kreuz hinzufuegen: */
+if (n == 4)
+   {
+    connect	root.out[2]	to slave[1].in[2];
+    connect	root.in[2]	to slave[1].out[2];
+    connect	slave[0].out[2]	to slave[2].in[2];
+    connect	slave[0].in[2]	to slave[2].out[2];
+   }
+/* Bei 8 Transputern zwei Kreuze: */
+if (n == 8)
+   {
+    connect	root.out[2]	to slave[3].in[2];
+    connect	root.in[2]	to slave[3].out[2];
+    connect	slave[0].out[2]	to slave[4].in[2];
+    connect	slave[0].in[2]	to slave[4].out[2];
+    connect	slave[1].out[2]	to slave[5].in[2];
+    connect	slave[1].in[2]	to slave[5].out[2];
+    connect	slave[2].out[2]	to slave[6].in[2];
+    connect	slave[2].in[2]	to slave[6].out[2];
+   }
+    
+if (n == 16)
+   {
+    rep i = 0 to 10
+       {
+	connect slave[(i + 4) % 16].out[3] to slave[i].in[2];
+	connect slave[(i + 4) % 16].in[3] to slave[i].out[2];
+       }
+    connect root.out[2] to slave[11].in[2];
+    connect root.in[2] to slave[11].out[2];
+    rep i = 12 to 14
+       {
+	connect slave[(i + 4) % 16].out[3] to slave[i].in[2];
+	connect slave[(i + 4) % 16].in[3] to slave[i].out[2];
+       }
+   }
+
+if (n == 32)
+   {
+    rep i = 0 to 22
+       {
+	connect slave[(i + 8) % 32].out[3] to slave[i].in[2];
+	connect slave[(i + 8) % 32].in[3] to slave[i].out[2];
+       }
+    connect root.out[2] to slave[23].in[2];
+    connect root.in[2] to slave[23].out[2];
+    rep i = 24 to 30
+       {
+	connect slave[(i + 8) % 32].out[3] to slave[i].in[2];
+	connect slave[(i + 8) % 32].in[3] to slave[i].out[2];
+       }
+    connect slave[7].out[3] to slave[7].in[3];
+    connect root.out[3] to root.in[3];
+   }
+
+/* Ordne Prozesse auf Transputern an: */
+use "@DIR@/@PROB@.lku" for root;
+place root on transp[0];
+rep i = 0 to n - 2
+   {
+    use "@DIR@/@PROB@.red.lku" for slave[i];
+    place slave[i] on transp[i + 1];
+   }
+
+/* Verbinde Root-Transputer explizit mit Host: */
+place root.from_server on transp[0].link[0];
+place root.to_server on transp[0].link[0];
+

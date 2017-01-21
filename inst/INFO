@@ -1,0 +1,38 @@
+Dieses Verzeichnis enthaelt den Quellcode fuer die Instanzen. Jede 
+Instanz ist durch zwei Dateien vertreten: u_???.c enthaelt die
+Instanzfunktionen, waehrend in u_???_types.h die generischen
+Datentypen definiert sind.
+
+error.h 	Symbolischer Link aus dem Kern-Verzeichnis
+		(Gemeinsames Includefile v. Kern und Instanz)
+
+makefile	Lokales Makefile (wird von 'make' aufgerufen)
+
+obj/		Hier legt 'make' die Objekte zu den 
+		Instanzfunktionen an
+
+read.h 		Symbolischer Link aus dem Kern-Verzeichnis
+		(Gemeinsames Includefile v. Kern und Instanz)
+
+set.h 		Symbolischer Link aus dem Kern-Verzeichnis
+		(Gemeinsames Includefile v. Kern und Instanz)
+
+u_funcs.h 	Symbolischer Link aus dem Kern-Verzeichnis
+		(Gemeinsames Includefile v. Kern und Instanz)
+
+u_gen.c		Vorlage fuer die Erstellung neuer Instanzfunktionen
+
+u_gen_types.h	Vorlage fuer die erstellung neuer generischer
+		Datentypen
+
+u_msp.c		Instanzfunktionen fuer das Machine Scheduling Problem
+
+u_msp_types.h	Generische Datentypen zum Machine Scheduling Problem
+
+u_scp.c		Instanzfunktionen fuer das Set Covering Problem
+
+u_scp_types.h	Generische Datentypen zum Set Covering Problem
+
+u_tsp.c		Instanzfunktionen fuer das Traveling Salesman Problem
+
+u_tsp_types.h	Generische Datentypen zum Traveling Salesman Problem

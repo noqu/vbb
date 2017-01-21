@@ -1,0 +1,39 @@
+Dies ist die INFO-Datei fuer das Wurzelverzeichnis des Projekts.
+In jedem Unterverzeichnis befindet sich eine entsprechende Datei, die
+kurz alle vorhandenen Dateien beschreibt.
+
+bin/		Ausfuehrbare Programme fuer alle Konfigurationen
+		und Instanzen. (Shellskripts, die von 'make' angelegt
+		werden, wenn eine Instanz erzeugt ist)
+
+conf/		Konfigurationsbeschreibungen fuer alle verwendeten
+		Konfigurationen (Circle, Torus, Sequentieller Kernel)
+		Hier werden letztlich die 'Bootable Files' des
+		Binders angelegt
+
+docu/		Zusaetzliche Dokumentation, die nicht an einzelne
+		Sourcen gebunden ist
+
+inst/		Instanzabhaengige Module (C-Code und Objekte)
+
+lku/		'Linked Units' des Binders, die mit Konfigurations-
+		beschreibungen zu instanzspezifischen Executables
+		gebunden werden.
+
+makefile	Haupt-Makefile fuer alle beteiligten Dateien.
+		'make help' gibt eine Beschreibung aus.
+
+par/		Alles, was zum parallelen Kern gehoert (C-Code,
+		Objekte, Kernel-Library)
+
+seq/		Alles, was zum sequentiellen Kern fuer 1 Transputer
+		gehoert (C-Code, Objekte, Kernel-Library)
+
+sun/		Alles, was zum sequentiellen Kernel fuer die Sun
+		gehoert (C-Code, Objekte, Kernel-Library)
+
+test/		Testprobleme, die im Rahmen der Arbeit verwendet
+		wurden. Parameterdateien fuer die Tests.
+
+tools/		Hilfsprogramme zum Erzeugen von Testproblemen, neuen
+		Konfigurationen, Map-Files etc. 

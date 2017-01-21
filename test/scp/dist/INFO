@@ -1,0 +1,20 @@
+Dieses Verzeichnis enthaelt die Parameterdateien fuer die zur
+Verteilungsstrategie durchgefuehrten Versuche beim SCP.
+Mit dem Shellskrip 'tq' koennen einzelne Versuche durchgefuehrt
+werden.
+
+USAGE: tq <anz> <scp-nr> <hi> <lo>
+anz:	Anzahl Transputer (2, 4, 9, ... 64)
+scp_nr:	Nummer des Beispielproblems (1...10)
+hi:	Parameter 'hi'
+lo:	Parameter 'lo'
+
+para.16		Parameterdateien fuer die Versuche zur Verteilung
+para.2			"
+para.25			"
+para.36			"
+para.4			"
+para.49			"
+para.64			"
+para.9			"
+tq*		Shellskript zum Aufruf eines einzelnen Tests

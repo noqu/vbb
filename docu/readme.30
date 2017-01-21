@@ -1,0 +1,168 @@
+Veraenderungen von 2.2renamed auf 3.0
+
+Jan  7 19:27 1993 
+
+Erste echte Paralellversion fuer mehr als 2 Transputer
+enthaelt (leider) sowohl eine groessere Umbenennung (-> 2.2renamed)
+als auch inhaltliche Veraenderungen:
+    Heap- und Disp-Zeug getrennt
+    Typ-Funktionen aus u_tsp ausgegliedert
+    Diverse Namen veraendert
+    Parameter ueber Kommandozeile und Parameterdatei moeglich
+    nicht mehr stdin, sondern Datei wird gelesen
+    icconfig-Parameter werden interpretiert
+    Bedingtes Tracing ueber Parameter schaltbar
+    Expander lehnt Knoten ab, wenn schlechter als letzte Generation
+    u_glob wird weitergegeben bis zu letztem
+    makefile entschieden abgespeckt
+
+Neue Files:
+    param.c		Testprogramm fuer Lesen der Parameterdatei
+    sbb.4.cfs		Knofigurationsprogramm fuer 4 Transputer
+
+gleichgeblieben:
+    mkmatr.c
+    sbb.1.cfs
+    trace.channel
+    tsp_trace
+
+prinzipiell gleichgeblieben (bis auf Umbenennungen):
+    expand.h
+    inout.h
+    mem.h
+    startup.h
+    trace.c
+
+grundsaetzliche Aenderungen:
+    alles Dispatcher-Zeug heisst disp*, d* ...
+    k_ - Vornamen entfallen, bzw. einiges k_Zeug heisst jetzt s_
+
+disp.c:
+    enthaelt Dispatcher-Code aus h_seq.c
+    bedingtes Tracing eingefuehrt
+    Ablehnung von Knoten durch Expander eingebaut
+    Rundum-Lauf bei Weitergeben angeschaltet (war auskommentiert)
+    Dispatcher endet, wenn m oder e starben, mit PARTNER_DEAD
+
+disp.h:
+    Uebernimmt Deklarationen aus h_seq.h
+    Neue Fehlermeldung D_DONE
+
+error.h:
+    misc.h auskommentiert (wozu war das gleich ?)
+    Fehler umbenannt
+    TRACE-Conditions eingefuehrt
+    
+expand.c:
+    ehemals e_seq.c
+    bedingtes Tracing eingefuehrt
+    Ablehnung von Knoten eingebaut
+    
+expand.h:
+    ehemals e_seq.h
+
+heap.c:
+    Enthaelt nur noch das Heap-Zeug aus h_seq.c
+    bedingtes Tracing eingefuehrt
+    Alle Heap-Funktionen jetzt public
+
+heap.h:
+    Enthaelt nur noch das Heap-Zeug aus h_seq.h
+    Alle Heap-Funktionen jetzt public
+
+inout.c:
+    included nicht mehr u_tsp.h (wieso auch ??)
+    bedingtes Tracing eingefuehrt
+
+inout.h:
+
+makefile
+    Kuerzere Namen eingefuehrt (keine Verzeichnisse mehr drin)
+    kein Extraverzeichnis fuer Includes
+    Dependencies nachgesehen und verbessert (sollten stimmen...)
+
+mem.c:
+    ehemals m_seq.c
+    included nicht mehr u_tsp.h (wieso auch ??)
+    bedingtes Tracing eingefuehrt
+    kommentierter Unsinn ueber Second-Time (provoziert Fehler, zum Test)
+
+mem.h:
+    ehemals m_seq.h
+
+queue.c:
+    included jetzt error.h
+
+queue.h:
+    Neuer Item-Typ Q_REJECT
+
+read.c:
+    enthaelt frueheres matrin.c plus Parameter-Stuff
+    enthaelt eigene Fehlercodes (?)
+    included nicht mehr error.h
+    Kommentare erweitert
+    Funktion readline auf gemeinsame Beduerfnisse von Matrix und 
+	Parameterdatei angepasst
+    merkwuerdiges Fehlermakro FAIL (?)
+    neue Funktionen
+	read_param
+	init_params
+
+read.h:
+    Stuff aus matrin.h, plus neue Deklarationen
+
+sbb.cfs.1:
+    ????
+
+startup.c:
+    ehemals k_seq.c
+    bedingtes Tracing eingefuehrt
+    neue Funktion init_glob (initialisiert bisher nur trace-Flags)
+    in/out_channel als Channel** statt *channel[4] (wg.  icconf-Datei)
+    Parameter aus icconf-Datei werden ausgewertet
+    Parameterdatei wird gelesen
+    Reihenfolge der Initialisierungen veraendert (wg. Tracing)
+    kommentierter Unfug fuer Channel-Belegungstest
+    u_glob-Stuff wird weitergegeben (war BUG !!)
+    Endebedingung veraendert (terminate nur fuer root)
+    rejected in Statistik aufgenommen
+
+startup.h:
+
+todo:
+    erledigt bzw. rausgenommen:
+	Parameterfile incl Funktion zum Lesen einfuehren
+	Alle Typorientierten Angelegenheiten aus u_tsp
+	    in eigenem u_types.c zusammenfassen
+    Vorhaben:
+	SC64
+	u_zf_t
+	wie gut ist rejecting ?
+	Memory overflow ?
+	wieso [em]-finished-Check in disp ?
+	Prio-Profil
+
+trace.c:
+
+trace.h:
+    alle Trace-Makros von Trace-Condition abhaengig gemacht
+
+types.h:
+    ehemals k_types.h
+    rejected in Statistik aufgenommen
+    glob_t neu
+
+u_tsp.c:
+    der Unfug mit konstanter Matrix ist verschwunden (thank god...)
+    die Datentyp-Funktionen jetzt in u_types.c
+    u_init_glob verwendet Filenamen aus Parameter
+    deswegen neue Fehlercodes
+
+u_tsp.h:
+    kein U_MALLOC mehr moeglich, dafuer U_PARAM und U_FILE
+
+u_types.c:
+    Neu, enthaelt jetzt die Typ-Funktionen aus u_tsp.c
+
+u_types.h:
+    Neu, uebernimmt die Deklarationen aus u_tsp.h fuer Typ-Funktionen

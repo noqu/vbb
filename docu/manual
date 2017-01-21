@@ -1,0 +1,243 @@
+
+BENUTZUNG DER TESTPROGRAMME
+
+Installation des Programmpakets
+-------------------------------
+
+Das Programmpaket auf der beiliegenden Diskette umfasst
+insgesamt folgende Teile:
+
+ - paralleler Kern
+ - sequentieller Kern, lauffaehig auf einem einzelnen Transputer
+ - sequentieller Kern, lauffaehig auf einer SUN-Workstation
+ - Instanzfunktionen fuer das Traveling Salesman Problem
+ - Instanzfunktionen fuer das Ueberdeckungsproblem
+ - Konfigurationen als Shifted-Torus (1, 2, 4, 9, 16, 25, 36,
+   49, 64 Transputer)
+
+Zusaetzlich sind folgende Ergaenzungen enthalten, die im Rahmen 
+der vorliegenden Arbeit nicht verwendet wurden und fuer den Fall 
+einer spaeteren Erweiterung gedacht sind: 
+
+ - Instanzfunktionen fuer das 3-Maschinen-Belegungsproblem
+   (nicht getestet)
+ - Konfigurationen als Kreis mit modulo-n/4-Verbindungen (1, 2,
+   4, 8, 16, 32, 64 Transputer)
+
+Voraussetzung fuer die Installation ist eine geeignete 
+Einstellung der Umgebungsvariablen und Pfade fuer den Einsatz 
+des INMOS ANSI C-Toolsets. Die Installation erfolgt in einem 
+eigenen Verzeichnis, unter dem der Verzeichnisbaum fuer alle 
+Dateien angelegt wird. Dieses Verzeichnis bezeichnen wir im 
+folgenden als Zielverzeichnis. Fuer eine vollstaendige 
+Installation (alle Instanzen auf allen Konfigurationen) wird 
+etwa 12 MB Plattenplatz benoetigt. 
+
+Um das Programmpaket zu installieren, muessen zunaechst die
+Dateien 'makefile' und 'vbb_42.taz' von der Installationsdiskette
+in das Zielverzeichnis kopiert werden. Durch Aufruf des
+Kommandos 'make install' im Zielverzeichnis wird der
+Verzeichnisbaum mit allen Quelldateien angelegt. Mit 'make all'
+wird dann eine vollstaendige Installation erzeugt. 'make help'
+gibt eine kurze Hilfeseite aus, auf der die Uebersetzung von
+Teilen des Pakets beschrieben ist. 'make clean' entfernt alle
+Dateien bis auf die Quellen wieder aus dem Zielverzeichnis.
+
+
+Aufruf der Programme
+--------------------
+
+Voraussetzung fuer die Verwendung der Programme auf dem
+Transputernetzwerk ist eine geeignete Einstellung der
+Umgebungsvariablen und Pfade zum Einsatz des Programms
+'iserver', das mit dem INMOS ANSI C-Toolset mitgeliefert wird
+und zum Konfigurieren und Booten eines Transputernetzwerkes
+dient. Ausserdem muessen die Verzeichnisse 'bin' und 'tools'
+(unterhalb des Zielverzeichnisses) in die Umgebungsvariable
+'PATH' aufgenommen werden.
+
+Die bei der Installation erzeugten Programme koennen jeweils
+unter einem eigenen Namen aufgerufen werden. Dabei gilt
+folgende Namenskonvention: Die Instanzen werden durch eine
+dreibuchstabige englische Abkuerzung gekennzeichnet. Dabei
+steht 'scp' fuer Set Covering Problem, 'tsp' fuer Traveling Salesman
+Problem und 'msp' fuer Machine Scheduling Problem. Diese
+Abkuerzung wird gefolgt von einem Punkt, der gewuenschten
+Netzgroesse und einem Kennbuchstaben fuer die Konfiguration. Der
+Kennbuchstabe lautet 't' fuer die in der Arbeit beschriebenen und
+getesteten Torus-Konfigurationen und 'c' fuer die zusaetzlich
+mitgelieferte circle-Konfiguration.
+
+Beispiel:
+    scp.16t
+          ^--- Kennbuchstabe fuer die Konfiguration (t: Torus,
+               c: Circle)
+        ^^---- Anzahl der Transputer
+    ^^^------- Instanz (scp, tsp oder msp)
+
+Fuer die sequentielle Version auf 1 Transputer lauten die
+letzten 3 Stellen 'seq'; fuer die sequentielle Version auf der
+Sun muss 'sun' eingesetzt werden.
+
+
+Kommandozeilen-Parameter
+------------------------
+
+Die Programme werden durch Angabe von Parametern gesteuert.
+Diese Parameter koennen entweder direkt auf der Kommandozeile
+stehen oder in einer Parameterdatei zusammengefasst werden. Im
+letzteren Fall wird lediglich der Name der Parameterdatei auf
+der Kommandozeile angegeben (mit einem vorangestellten '@'
+gekennzeichnet).
+
+Parameter fuer die Instanzfunktionen (muessen angegeben werden):
+
+  mat=dateiname          Datei mit der Entfernungsmatrix fuer TSP
+                         oder MSP
+  kl=dateiname           Datei mit der Kantenliste fuer SCP
+
+Numerische Parameter:
+
+  DIST_LO=wert           Laenge des Verteilungsintervalls lo
+  DIST_HI=wert           Laenge des Verteilungsintervalls hi
+  DIST_IDLE=wert         Laenge des Verteilungsintervalls idle
+  PRIO_PAR=wert          Parameter fuer die Prioritaetsbestimmung
+  MIN_HEAP_SIZE=wert     Zahl der Knoten auf dem Heap , ab  der
+                         Arbeit an Nachbarn abgegeben wird.
+Boolsche Parameter:
+
+  ELIM_BY_HEUR           Schaltet die Verwendung der Heuristik
+                         zum Eliminieren von Knoten ein.
+  DIST_COUNT_FATHERS     schaltet die Zaehlung von fertig
+                         expandierten Vaterknoten als Zyklus
+                         ein. (fuer die Laufzeitversuche stets
+                         eingeschaltet)
+  STATISTIC              schaltet die Erhebung und Ausgabe von
+                         Statistikinformationen fuer alle
+                         Transputer ein.
+  STAT_SUMS              beschraenkt die Ausgabe von Statistik-
+                         informationen auf Summen und Durchschnitte 
+			 ueber alle Transputer
+  NO_SOLUTION            unterdrueckt die Ausgabe der Loesung.
+                         Sinnvoll bei Testreihen, die in
+                         Protokolldateien aufgenommen werden.
+
+Beispiel:
+
+  tsp.16t mat=tsp30.7 ELIM_BY_HEUR @para16
+
+Es wird ein TSP auf 16 Transputern in der Torus-Konfiguration
+bearbeitet. Die Entfernungsmatrix wird aus der Datei 'tsp30.7'
+gelesen; beim Eliminieren von Knoten wird die Heuristik
+verwendet. Weitere Parameter werden aus der Datei 'para16'
+gelesen.
+
+Wenn der Parameter STATISTIC angegeben wird, liefert das
+Programm umfangreiche Informationen Åber den Verlauf des
+Verfahrens. Die einzelnen Werte haben dabei folgende
+Bedeutung:
+
+  n    	   Transputernummer
+  exp. 	   Expandierte Knoten
+  erz. 	   Erzeugte Knoten
+  el(bd).  Direkt nach der Erzeugung durch die untere Schranke 
+  	   eliminierte Knoten
+  el(he).  Beim Durchsuchen des Heaps eliminierte Knoten
+  heu. 	   Mit der Heuristik bearbeitete Knoten (ohne Wurzelknoten)
+  zl.  	   Zulaessige Knoten
+  im.  	   Verbesserungen der Bestloesung im Verlauf des Verfahrens
+  all. 	   Allokierte Knoten
+  lifo 	   Mit LIFO ausgewaehlte Knoten
+  sent 	   An Nachbarn verschickte Knoten
+  idle 	   Zeit, waehrend der die idle-Flagge gesetzt war (in Clock-
+       	   Ticks, hat aber aufgrund der Arbeitsweise des Schedulers nur
+       	   begrenzte Aussagekraft)
+
+In der letzten Zeile der Ausgabe wird jeweils die Summe der Werte
+ueber alle Transputer ausgegeben, bzw. fuer die Werte 'all', 'lifo',
+'sent' und 'idle' der Durchschnitt.
+
+Testprobleme fuer das Traveling Salesman Problem
+-----------------------------------------------
+
+Die Instanzfunktionen fuer das TSP erwarten eine quadratische
+Entfernungsmatrix fuer n Ecken in einer Datei, deren Name mit
+Hilfe des Parameters 'mat' angegeben wird. Die Datei hat
+folgendes Format:
+
+# Kommentar
+ZEILEN=n
+SPALTEN=n
+d00 d01 ... d0n
+d10 ... ... ...
+... ... ... ...
+dn0 ... ... dnn
+
+Dabei wird jede Entfernung dij durch eine ganze Zahl
+angegeben. Der Buchstabe M steht dabei fuer den Wert MAXINT. Es
+ist sinnvoll, die Entfernung einer Ecke zu sich selbst stets
+als M anzunehmen.
+
+Testprobleme fuer das TSP koennen mit Hilfe des Programms 'mk_tsp'
+zufaellig erzeugt werden. Die Aufrufsyntax ist folgendermassen:
+
+  mk_tsp [-s size] [-m max] [-p prob]
+
+Es wird ein TSP mit size Ecken erzeugt. Kantenlaengen werden
+aus dem Intervall [0, max] zufaellig gewaehlt. Die Verbindungs-
+wahrscheinlichkeit betraegt prob %.
+
+Die Testdateien fuer die in der Arbeit beschriebenen
+Versuchsreihen zum TSP stehen im Verzeichnis 'test/tsp/TSPs'. In
+'test/tsp' befinden sich drei weitere Verzeichnisse mit
+Parameterdateien zu den einzelnen Versuchsreihen:
+
+  test/tsp/heur      Versuche zur Prioritaetsfunktion und Heuristik
+  test/tsp/dist      Versuche zur Verteilungsstrategie
+  test/tsp/speedup   Versuche zum Speedup
+
+
+Testprobleme fuer das Ueberdeckungsproblem
+----------------------------------------
+
+Die Instanzfunktionen fuer das SCP (Ueberdeckungsproblem)
+erwarten eine bewertete Kantenliste in einer Datei, deren Name
+mit Hilfe des Parameters 'kl' angegeben wird. Die Client- und
+Server-Ecken werden dabei grundsaetzlich von 0 an
+durchnumeriert. Die Datei hat folgendes Format:
+
+# Kommentar
+QUELLEN=anzahl-server-ecken
+SENKEN=anzahl-client-ecken
+server-ecke   ;   wert
+server-ecke   ;   wert
+
+server-ecke   client-ecke
+server-ecke   client-ecke
+
+Testprobleme fuer das SCP koennen mit Hilfe des Programms 'mk_scp'
+zufaellig erzeugt werden. Die Aufrufsyntax ist folgendermassen:
+
+  mk_scp [-q quellen] [-s senken] [-m max] [-p prob]
+
+Es wird ein Ueberdeckungsproblem mit 'quellen' Server-Ecken und
+'senken' Client-Ecken erzeugt. Die Bewertungen der Server-Ecken
+werden zufaellig aus dem Intervall [0, max] gewaehlt. Die Verbindungs-
+wahrscheinlichkeit fuer jede Server-Client-Kombination betraegt prob %.
+
+Die Testdateien fuer die in der Arbeit beschriebenen
+Versuchsreihen zum SCP stehen im Verzeichnis 'test/tsp/SCPs'. In
+'test/scp' befinden sich drei weitere Verzeichnisse mit
+Parameterdateien zu den einzelnen Versuchsreihen:
+
+  test/scp/heur      Versuche zur Prioritaetsfunktion und Heuristik
+  test/scp/dist      Versuche zur Verteilungsstrategie
+  test/scp/speedup   Versuche zum Speedup
+
+
+Testprobleme fuer das Maschinenbelegungsproblem
+----------------------------------------------
+
+Es wird eine 3 x n -Matrix fuer die Angabe der Laufzeiten der n
+Auftraege auf den 3 Maschinen verwendet. Das Dateiformat
+entspricht dem TSP.

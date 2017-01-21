@@ -1,0 +1,31 @@
+Nachtraegliche Aenderungen auf sequentieller Ebene.
+Verbesserung der unteren Schranke durch vollstaendige
+Reduktion der Entfernungsmatrix. Verwendung von char als
+Typ fuer die Felder in Knoten.
+
+Feb  5 15:07 1993  Comparison of 1.15 1.16 Page 1
+
+
+different	./h_seq.c
+different	./k_seq.c
+different	./u_tsp.c
+different	./u_types.h
+
+h_seq.c:
+    unbedeutend, Kommentare von Experiment uebergeblieben
+
+k_seq.c:
+    Fehler gefunden !! Bei letztem Sohn werden 2 Knoten allokiert
+
+u_tsp.c:
+    Tracing wieder eingebaut
+    static-Funktionen rausgenommen fuer profiling
+    an vielen Stellen char statt int
+    Fehler durch z-z Verbindung nochmal eliminiert (??)
+    Neue Funktionen: getrsmin() und getrzmin().
+    Kommentar korrigiert: Maximum der lbounds wird verwendet
+    u_lower_bound erheblich erweitert um Reduktion
+    Umgestellt auf Tiefensuche
+
+u_types.h:
+    viele char statt int

@@ -1,0 +1,16 @@
+In diesem Verzeichnis legt 'make' die 'Linked Units' an, die von
+'ilink' durch Binden von Kern und Instanzfunktionen erzeugt werden. 
+Die 'Linked Units' werden mit Konfigurationsbeschreibungen (aus
+../conf/???/inst) zu 'Bootable Files' (eben dort) verbunden.
+Zu jeder Instanz werden drei Dateien folgender Form angelegt:
+
+???.lku		Code fuer Root-Transputer (mit stdio.lib)
+
+???_red.lku	Code fuer Nicht-Root-Transputer (ohne stdio.lib)
+
+???_seq.lku	Code fuer sequentiellen Kern auf 1 Transputer
+
+fake_io.c	C-Code fuer Dummy-Funktionen aus stdio.lib, die beim
+		Binden mit der reduzierten Library benoetigt werden.
+
+makefile	Lokales Makefile, wird von 'make' aufgerufen.

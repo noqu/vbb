@@ -1,0 +1,60 @@
+Aenderungen von 3.25 auf 3.3
+Mar  2 00:08 1993 
+(nachtraeglich erstellt, wahrscheinlich 3.3 vom 16.2. (??))
+
+Gleichgeblieben:
+    .make_all
+    disp.h
+    expand.h
+    fake_io.c
+    heap.c
+    heap.h
+    ic.so
+    inout.h
+    mem.h
+    mkmatr
+    mkmatr.c
+    queue.c
+    queue.h
+    startup.h
+    trace.h
+    types.h
+
+disp.c:
+    included time.h
+
+error.h:
+    Fehlernummern fuer U_FUNCS
+
+expand.c:
+    included u_funcs.h statt u_tsp.h
+    Ueberfluessige variablen weg
+    Fehler gefunden: Griff auf u_node zu
+
+inout.c:
+    included u_funcs.h statt u_tsp.h
+
+makefile:
+    scp und tsp integriert mit PROB
+
+mem.c:
+    included u_funcs.h statt u_tsp.h
+
+read.c:
+    kl_input() fuer Kantenlisten-Eingabe neu
+    FAIL anderer Status
+
+read.h:
+    dito
+
+startup.c:
+    included u_funcs.h statt u_tsp.h
+    u_glob wird von u_init_glob() allokiert wg. generischer Typen
+    solution nicht mehr intern geaendert => START_HEUR obligatorisch
+
+u_tsp.c:
+    u_glob wird von u_init_glob() allokiert wg. generischer Typen
+    u_types - Funktionen hier integriert
+
+u_types.h
+    generische Fassung mit void

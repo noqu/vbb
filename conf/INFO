@@ -1,0 +1,13 @@
+Dieses Verzeichnis enthaelt die Konfigurationsbeschreibungen und die
+daraus entstehenden 'Bootable Files'. Diese sind nach Konfigurationen
+geordnet:
+
+circle/		Konfiguration als "modulo-n/4-Kreis". Wird nicht in
+		der Arbeit vorgestellt, weil durch Torus abgeloest.
+
+seq/		Sequentielle Version auf 1 Transputer. Erfordert
+		nur eine rudimentaere Konfigurationsbeschreibung.
+
+torus/		Konfiguration als n x n - Torus. Dies ist die 
+		leistungsfaehigere Konfiguration und wird daher in der
+		Arbeit besprochen und fuer die Tests verwendet.

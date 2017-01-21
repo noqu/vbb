@@ -1,0 +1,92 @@
+Veraenderungen von Version 3.0 auf 3.1
+Feb 10 17:49 1993  
+
+Nachtraeglich erstellter dircmp, Version scheint v. 21.1.93 zu sein
+
+Strategie in eigenes Modul ausgelagert, aber noch mod-k
+Viele neue Parameter fuer Heuristik und Verteilung
+Bugs: Falsche Queue bei try_pruning, Loesungen mit unklarer Markierung
+Statistik-Kaskade am Ende
+Profil der L-Bounds bei Statistik
+I/O findet nur auf der Wurzel statt, aber andere iserver noch noetig
+
+Gleichgeblieben:
+    disp.h
+    expand.h
+    inout.h
+    mem.c
+    mem.h
+    mkmatr
+    mkmatr.c
+    queue.c
+    read.c
+    read.h
+    sbb.2.cfs
+    sbb.4.cfs
+    startup.h
+    todo
+    trace.c
+    trace.h
+    tsp_trace
+    u_tsp.h
+    u_types.c
+    u_types.h
+
+disp.c:
+    Neue Funktion to_all_neighbors() vereinfacht Broadcasting
+    Strategie wird durch make_distrib() eingefuehrt
+    Dafuer diverse neue Felder (last_heard_from, ...)
+    counter wird jetzt fortlaufend gefuehrt
+    idle-Pakete werden verschickt
+    Neuer Parameter DIST_COUNT_FATHERS
+
+error.h:
+    Viel Kosmetik
+    Neue Parameter START_HEUR, SINGLE_CPU, DIST_COUNT_FATHERS,
+	PROFILE, ONE_HOST_CHAN
+
+expand.c:
+    Profiling wird gefuehrt
+    Uebler Bug: try_pruning erhielt falsche Queue
+    Heuristik ueber Parameter schaltbar
+
+heap.c:
+    Neue Funktionen h_get_best_prio() und h_heap_size()
+    Heapsize wird fortlaufend gefuehrt
+
+heap.h:
+    Deklarationen fuer die neuen Funktionen
+
+inout.c:
+    bei in und out fuehrt der Empfang v. Q_FINISH zum Abbruch
+
+makefile:
+    auf t805 umgestellt
+
+queue.h:
+    neuer Typ Q_IDLE
+
+sbb.cfs:
+    Aenderungen im Interface (Topologie unueberschaubar)
+
+startup.c:
+    Default-Parameterwerte eingefuehrt
+    print_stat() nimmt jetzt ein Argument
+    node heisst jetzt startnode (?)
+    Puffer fuer Statistik eingefuehrt
+    parallel wird aus nr_of_cpus bestimmt
+    Soft-Channels zum Testen jetzt rausgenommen
+    Anfangsloesung jetzt optional mit Heuristik (Parameter)
+    Anfangsloesung wird klar als Loesung markiert (free, fixed, depth)
+    Nach dem Ende wird auf Statistik-Kaskade gewartet
+    Alle Statistiken werden an der Wurzel ausgegeben
+    Statistikausgabe veraendert
+    print_stat() berechnet auch die Skalierung des Profils
+    in init_glob() werden alle neuen Parameter gelesen
+
+
+types.h:
+    Werte fuer Profiling und dist_interval in glob eingefuegt
+
+u_tsp.c:
+    in u_heur_loes() wird Loesung klar als solche markiert (free, depth)

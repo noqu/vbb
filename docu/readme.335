@@ -1,0 +1,31 @@
+Aenderungen von 3.3 auf 3.35
+
+different	./disp.c
+different	./expand.c
+different	./heap.c
+different	./makefile
+different	./q
+different	./startup.c
+different	./types.h
+different	./u_tsp.c
+
+disp.c:
+    Verteilungsstrategie ohne make_distrib(), zu Fuss
+    MIN_HEAP_SIZE eingefuehrt
+
+expand.c:
+    Soehne bekommen ihren Vater eingetragen, wenn sie entstehen
+
+heap.c:
+    LIFO-Stack und Binaerbaum eingebaut
+
+startup.c:
+    MAX- und MIN_HEAP_SIZE
+    Verbesserungen von Fehlern bei DEF_DIST-stuff
+    Statistik angepasst
+
+types.h:
+    Diverse Veraenderungen an Statistik
+
+u_tsp.c:
+    Bei para = 0 wird Tiefe als sekundaeres Kriterium genommen

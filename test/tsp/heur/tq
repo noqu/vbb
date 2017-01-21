@@ -1,0 +1,25 @@
+:
+if [ $# -ne 4 ]
+then
+    echo "USAGE: $0 <anz> <tsp-nr> <prio> <H|N>" >&2
+    exit 1
+fi
+
+NR=$1
+TSP=$2
+PR=$3
+HEU=$4
+	
+if [ "$HEU" = "H" ]
+then
+    HEU_PAR="ELIM_BY_HEUR"
+else
+    HEU_PAR=""
+fi
+
+CMD="tsp.${NR}t mat=../TSPs/tsp30.$TSP PRIO_PAR=$PR $HEU_PAR NAME=$NR/$TSP/$PR/$HEU \
+@para.$NR |& tee -a prot.$NR.$TSP"
+
+csh <<END
+$CMD
+END

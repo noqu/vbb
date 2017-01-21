@@ -1,0 +1,118 @@
+Aenderungen von 1.2 auf 2.0
+Oct 12 15:18 1992  
+
+Umstellung des gesamten Systems auf Mehrprozessbetrieb auf einem
+Transputer. Kern, Expander, Memserver und Heapserver als jeweils
+eigene Prozesse, die ueber Queues miteinander kommunizieren.
+Loesungen werden nicht mehr als eigener Datentyp betrachtet sondern
+in normalen K-Nodes gefuehrt.  Ausserdem formale Einfuehrung 
+von Prototypen. Makefile und Includes transputerspezifisch.
+
+Neue Files:
+    e_seq.c		Code fuer Expander (frueher in k_seq.c)
+    e_seq.h		Prototypen
+    k_seq.h		Prototypen und neue Fehlertypen
+    matrin.h		Prototypen
+    queue.c		Asynchrone Queues
+    queue.h 		Prototypen, Typen  und neue Fehlertypen
+
+Gleichgeblieben:
+    mkmatr.c
+
+error.h:
+    QUEUE_ERR eingefuehrt
+    public eingefuehrt
+    FEHLER als eigenes Makro aus ST-Fkt. herausgenommen
+    B_ST fuer Server-Fehler
+
+h_seq.c
+    Prototypen fuer Funktionen eingefuehrt
+    stdlib.h included wg. Prototypen
+    incumbent jetzt vom Typ k_node_t*
+    h_read_incumbent entsprechend anders
+    in h_init_heap wird Incumbent nur mit Wert initialisiert
+    heap_server als eigener Prozess
+    alle Funktionen ausser Server und h_read_incumbent static gemacht
+    h_new_incumbent verwendet jetzt Queues
+    h_new_incumbent gibt Status zurueck
+
+h_seq.h:
+    Prototypen fuer Funktionen eingefuehrt
+    H_HEAP_EMPTY als eigene Fehlermeldung
+    alles ausser Server und h_read_incumbent () herausgenommen
+
+k_seq.c:
+    Prototypen fuer Funktionen eingefuehrt
+    enthaelt jetzt Code zum Erzeugen der Queues, Starten der Server etc.
+    Expander jetzt in e_seq.c
+    stdlib.h included wg. Prototypen
+    eigene k_seq.h fuer Fehler 
+    globale Flags [emh]_finished
+    h_init_heap () macht jetzt der Heapserver
+    Heap und Mem - Funktionen jetzt ueber Queues
+    Erzeugung des Startknotens auf dem Heap noch hier
+    Anfangs-Incumbent muss allokiert werden
+    Ausgabe von Loesung und Statistik hier
+
+e_seq.c:
+    Prototypen fuer Funktionen eingefuehrt
+    enthaelt jetzt den Expander-Code aus k_seq.c
+    Abbruchbedingung jetzt von Heapserver abhaengig
+    alle Knoten werden ueber Queues bewegt
+    Fehlerbehandlung auf B_ST umgestellt
+    u_solution wird statt u_generate_sol aufgerufen
+    Incumbent jetzt auch vom Typ k_node_t*
+    k_try_pruning erhaelt auch Queues
+    in k_try_pruning () eigene Knoten fuer Heuristik (ueber Queues)
+
+k_types.h:
+    Neues Element value in k_node_t aufgenommen
+
+m_seq.c:
+    Prototypen fuer Funktionen eingefuehrt
+    Umgestellt auf eigenen Server
+    stdlib.h included
+    alles ausser Server static gemacht
+
+m_seq.h:
+    Prototypen fuer Funktionen eingefuehrt
+    alles ausser Server herausgenommen
+    
+makefile:
+    Directories verkuerzt (wg. idebug)
+    Flags und Kommandos umgestellt auf Transputer
+    .make_all eingefuehrt
+    diverse Abhaengigkeiten ergaenzt
+
+matrin.c:
+    Prototypen fuer Funktionen eingefuehrt
+
+trace.c:
+    Prototypen fuer Funktionen eingefuehrt
+    Pointerwerte (in Kommentaren) hinzugefuegt
+
+trace.h:
+    Prototypen fuer Funktionen eingefuehrt
+    misc.h included fuer evtl. debug-Tracing
+
+u_tsp.c:
+    Prototypen fuer Funktionen eingefuehrt
+    Reihenfolge der Includes veraendert (wieso ?)
+    stdlib.h und string.h hinzugefuegt wg. Prototypen
+    matrin.h jetzt included wg. Prototypen
+    u_generate_sol () ersetzt durch u_solution ()
+    Loesungen werden jetzt als k_node_t* gefuehrt
+    Intern wird ZF-Wert in Lower-Bound gehalten fuer erneuten Aufruf
+    Kein Durchlaufen der Ecken mehr bei u_solution (), nur letzte 
+	Ecke und Rueckweg werden hinzugefuegt
+    u_heur_loes () arbeitet in u_node mit "umgewidmeten" Feldern
+    (u_heur_loes () noch ungetestet)
+    u_print_sol mit anderem Loesungstyp, liefert Status 
+    u_print_sol dreht Knoten in sich um
+
+u_tsp.h:
+    Prototypen fuer Funktionen eingefuehrt
+    U_INCOMPLETE_SOL als neue Fehlermeldung
+
+u_types.h:
+    u_solution_t rausgeworfen (bzw. auskommentiert)

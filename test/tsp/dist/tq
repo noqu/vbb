@@ -1,0 +1,18 @@
+:
+if [ $# -ne 4 ]
+then
+    echo "USAGE: $0 <anz> <tsp-nr> <hi> <lo>" >&2
+    exit 1
+fi
+
+NR=$1
+TSP=$2
+HI=$3
+LO=$4
+	
+CMD="tsp.${NR}t mat=../TSPs/tsp30.$TSP DIST_HIGH=$HI DIST_LOW=$LO \
+NAME=$NR/$TSP/$HI/$LO @para.$NR |& tee -a prot.$NR.$TSP"
+
+csh <<END
+$CMD
+END

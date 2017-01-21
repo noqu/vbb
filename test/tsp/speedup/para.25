@@ -1,0 +1,73 @@
+#--------------------------------------------------------------
+# Parameterfile zur Verwendung mit TSP und SCP
+#--------------------------------------------------------------
+# Abstaende fuer die Abgabe von Knoten an Nachbarn (in Zyklen)
+# (1 Zyklus = Erzeugung von 1 Knoten, s.a. DIST_COUNT_FATHERS)
+
+DIST_LOW=10			# Nachbar, der zuletzt "besseren"
+				# Knoten lieferte
+DIST_HIGH=3			# Nachbar, der zuletzt "schlechteren"
+				# Knoten lieferte
+DIST_IDLE=1			# Nachbar, der momentan keine
+				# Arbeit hat
+DIST_COUNT_FATHERS		# Komplette Expansion eines 
+				# Vaterknotens soll auch als 
+				# Zyklus zaehlen:
+MIN_HEAP_SIZE=2			# Minimale Zahl von Knoten auf Heap,
+				# bei der  Arbeit abgegeben wird
+
+#--------------------------------------------------------------
+# Parameter fuer die Berechnung der Prioritaet (fuer Benutzerfunktion)
+# (Hier: prozentualer Anteil der Tiefe an Prioritaet)
+
+PRIO_PAR=30
+
+#--------------------------------------------------------------
+# Einstellungen zur erwuenschten Ausgabe
+
+NO_SOLUTION			# Keine Loesung ausgeben 
+# STAT_KEEP			# Statistikdaten nicht im Netz 
+				# weitergeben
+# STATISTIC			# ausfuehrliche Statistikinformationen
+				# pro Prozessor
+STAT_SUMS			# Summen und Durchschnittswerte 
+				# ueber alle Prozessoren
+
+#--------------------------------------------------------------
+# Verwendung der Heuristik:
+
+# ELIM_BY_HEUR			# Verwende Heuristik zum Eliminieren 
+				# von Knoten
+
+#--------------------------------------------------------------
+# Einstellungen zur Umschaltung zwischen LIFO und HEAP
+
+MAX_HEAP_SIZE=1000000		# Maximale Groesse des Heaps 
+				# (dann erfolgt Ueberlauf in FIFO)
+RESERVE_SIZE=1000		# Groesse der Lifo-Reserve (fuer
+				# automatische Bestimmung der
+				# MAX_HEAP_SIZE). Das Minimum der
+				# beiden Werte gilt
+
+#--------------------------------------------------------------
+# Einstellungen zur Ausgabe von Profil-Histogrammen ueber die
+# unteren Schranken der ausgewerteten Knoten:
+
+# PROFILE   			# Profile sollen ausgegeben werden
+PROF_START=80			# Start des Bereichs fuer Profile
+PROF_CLASSES=10			# Anzahl KLassen im Profil-Histogramm
+PROF_UNIT=6			# Breite einer Klasse im Histogramm
+PROF_SCALE=200			# Skalierungsfaktor fuer grafische 
+				# Darstellung (bestimmt in etwa die
+				# Anzahl Punkte auf dem Diagramm)
+
+#--------------------------------------------------------------
+# Schalter fuer das Tracing der verschiedenen Module
+
+# TRACE_DISP
+# TRACE_EXP
+# TRACE_HEAP			# (Nur im sequentiellen Kern moeglich)
+# TRACE_INOUT
+# TRACE_MEM
+# TRACE_STARTUP
+

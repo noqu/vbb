@@ -1,0 +1,108 @@
+Aenderungen von Version 2.0 auf 2.1
+Oct 21 14:01 1992  
+
+Prozesse fuer In und Out eingefuehrt
+Tracing wird jetzt ueber Queues abgewickelt (noch nicht ueber Kanaele)
+Incumbent wird von h_new_incumbent verglichen
+deswegen eigene Fkt h_init_incumbent
+k_seq kuemmert sich um Tracer-Queues (mit Zeitstempel)
+Fehler in u_flat_node beseitigt
+Tracing ueberarbeitet (bessere Aussagekraft der Werte)
+
+Neue Files
+    inout.c
+    inout.h
+
+Gleichgeblieben:
+    k_seq.h
+    k_types.h
+    matrin.c
+    mkmatr.c
+    u_tsp.h
+    u_types.h
+
+e_seq.c:
+    expander bekommt jetzt auch Tracer-Queue uebergeben
+    Trace-Makro-Aufrufe auf TKN reduziert und nach hinten verschoben
+    value wird jetzt direkt in Sohn geschreben
+    k_try_pruning erhaelt Tracer-Queue
+
+e_seq.h:
+    expander erhaelt Tracer-Queues
+
+error.h:
+    Neue Fehlermeldung INOUT_ERR
+
+h_seq.c:
+    Verwendet jetzt out_finished[4]
+    heap_server erhaelt Tracer-Queues
+    Neue Funktion h_init_incumbent
+    Weitergeben an Nachbarn itegriert in Heapserver
+    Counter und sendto werden mitgezaehlt fuer abwechselndes Senden
+    Statusabfrage nach h_new_incumbent korrigiert
+    empfangene Knoten werden verarbeitet
+    auch empfangene Incumbents, erste oder normale
+    h_new_incumbent ueberprueft selbst, ob incumbent besser
+    daher auch boolean
+
+h_seq.h:
+    heapserver erhaelt tracer_queues
+
+
+k_seq.c:
+    NR_OF_PROCESSES eingefuehrt wg. Tracing
+    Prozesse fuer in und out werden gestartet
+    (momentan noch von Hand festgelegt, welche)
+    in/out_finished[4] eingefuehrt
+    Queueverbindungen fuer in und out
+    Zaehler mi und mo fuer Memeserver-Queue-Array
+    Zaehler tt fuer Tracer-Queue-Array
+    included jetzt channel.h und inout.h
+    vorlaeufige Loesung: link_connected
+    k_server ueberwacht Tracer-Queues, macht fprintf und free
+    Kanaele wereen eingerichtet fuer in->out Kurzschluss
+    Heapserver, Expander und Memserver erhalten Tracer-Queues
+    Erste Incumbent ist vom Typ Q_INIT_INC
+    Anordnung der Initialisierungen veraendert
+    K-Server endet erst, wenn Tracer-Queues auch leer
+    Diverse Kommentare hinzugefuegt
+    Abbruchwerte in ...finished  werden einzeln aus sts erzeugt
+
+m_seq.c
+    memserver erhaelt auch Tracer-Queues
+
+m_seq.h
+    memserver erhaelt auch Tracer-Queues
+
+makefile:
+    inout.tco hinzugefuegt
+    diverse Files nicht mehr von trace.h abhaengig
+    queue.c, u_tsp.c
+
+matrin.h:
+    public in extern korrigiert
+
+
+queue.c:
+    Tracing entfernt (kein Server)
+
+queue.h:
+    Q_INIT_INC neuer Typ fuer Queue-Items
+
+trace.c:
+    komplett neu geschrieben fuer sprintf und verschicken
+    Neu: trace_feld, trace_string, trace_value, trace_k_node
+    included jetzt auch time.h (wg. Zeitstempel) und stdlib.h
+    Allokiert fuer jedes Tracepaket Platz
+    Trace-Format verkuerzt und einheitlicher gemacht
+
+trace.h:
+    Die Makros rufen jetzt nur noch die Funktionen aus trace.c
+    Alle Makros sind auf die Variable to_tracer angewiesen !
+    TRACE_BUF_SIZE wird hier festgelegt
+    Neuer Typ trace_t enthaelt String und Zeitstempel/Prozessornr.
+    Deklaration der neuen Funktionen aus trace.c
+
+u_tsp.c:
+    Tracing entfernt (kein Server)
+    BUG in u_flat_node beseitigt: Doppeltes Increment von flat

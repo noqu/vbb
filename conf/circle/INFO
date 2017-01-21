@@ -1,0 +1,21 @@
+Dieses Verzeichnis enthaelt die Konfigurationsbeschreibungen fuer den
+"modulo-n/4-Kreis" (Circle) Diese Konfiguration wurde nur in der 
+Anfangsphase verwendet und inzwischen durch den (leistungsfaehigeren) 
+Torus abgeloest. Die generische Beschreibung der Konfigurationen befindet
+sich in diesem Verzeichnis. Beschreibungen fuer Instanzen werden in 
+'inst' angelegt (von 'make')
+
+NU		Liste der Netzgroessen, die diese Konfiguration 
+		beinhaltet. Wird von 'make' benoetigt.
+
+inst/		Verzeichnis, in dem 'make' die
+		Konfigurationsbeschreibungen fuer Instanzen anlegt. 
+		Dort entstehen auch die 'Bootable Files'
+
+makefile	Lokales Makefile, wird von 'make aufgerufen
+
+vbb.??c.cfs	Generische Fassung einer Konfigurationsbeschreibung
+		fuer ?? Transputer in der Circle-Konfiguration
+
+vbb.??c.dsc	Generische Fassung einer Mapping-Datei fuer den NCM
+		fuer ?? Transputer in der Circle-Konfiguration

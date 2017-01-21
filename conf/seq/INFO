@@ -1,0 +1,15 @@
+Dieses Verzeichnis enthaelt die (generische) Konfigurationsbeschreibung 
+fuer den sequentiellen Kern auf 1 Transputer.  Beschreibungen fuer 
+Instanzen werden in 'inst' angelegt (von 'make')
+
+inst/		Verzeichnis, in dem 'make' die
+		Konfigurationsbeschreibungen fuer Instanzen anlegt. 
+		Dort entstehen auch die 'Bootable Files'
+
+makefile	Lokales Makefile, wird von 'make aufgerufen
+
+vbb.seq.cfs	Generische Fassung einer Konfigurationsbeschreibung
+		fuer 1 Transputer 
+
+vbb.seq.dsc	Generische Fassung einer Mapping-Datei fuer den NCM
+		fuer 1 Transputer

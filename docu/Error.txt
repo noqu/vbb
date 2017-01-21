@@ -1,0 +1,34 @@
+Fehlerbehandlung:
+mem.c:
+    Macht (fast) nie auf eigene Faust Schluss (nur wenn ganz zu
+    Beginn malloc-Fehler kommen, dann ist aber eh alles aus...)
+    Wenn Fehler auftritt, werden Fehlertokens auf allen Qs verschickt
+    (Irgendjemand wird es dem Dispatcher dann schon sagen)
+
+Expander:
+    Liefert auf jeden Fall ein Token an Dispatcher, ehe er stirbt
+    Normalerweise bleibt er aber am leben, um keine Q_PARTNER-
+    Fehler zu erzeugen
+
+Dispatcher:
+    Setzt intern nur sts, nicht d_finished, wenn was passiert
+    Schickt bei Fehlern Token an Out[0]
+    Beendet sich selbst aber nicht ueber d_finished
+
+Out:
+    Reagiert nur auf Fehlertokens, kann keine eigenen machen
+    Schickt Fehlertoken weiter im Ring
+    Out[0] beendet dann den Dispatcher, so dass Startup nicht zu
+    frueh die anderen runterzieht.
+
+In:
+    Gibt Fehlertokens weiter an Dispatcher. 
+    Nach fremden Fehlertokens von aussen beendet es sich
+    eigene Fehlertokens (von mem) fuehren nicht zum Abbruch,
+    weil sonst der Ringvorgaenger haengt
+
+Startup:
+    Wartet auf Dispatcher-Ende
+    (Dann ist das Fehlertoken garantiert schon von Out weitergegeben
+    worden.)
+    Danach wird auf das freiwillige Ende von In[1] gewartet

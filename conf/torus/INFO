@@ -1,0 +1,30 @@
+Dieses Verzeichnis enthaelt die Konfigurationsbeschreibungen fuer den
+Torus. Diese Konfiguration wird in der Arbeit beschrieben und fuer
+alle Tests verwendet. Die generische Beschreibung der Konfigurationen 
+befindet sich in diesem Verzeichnis. Beschreibungen fuer Instanzen 
+werden in 'inst' angelegt (von 'make')
+Es handelt sich um Tori mit unregelmaessigem Zeilen- und
+Spaltenversatz, wie in der Arbeit beschrieben. Zur Erzeugung anderer
+Versatz-Kombinationen dient die Datei 'torus.cfs', aus der mit
+Hilfe des Skripts 'mk_torus' neue generische '.cfs' und '.dsc'-
+Dateien erzeugt werden koennen. Dieser Vorgang wird jedoch von den
+mitgelieferten Makefiles nicht unterstuetzt und muss von Hand durch-
+gefuehrt werden (sollte aber nicht allzu schwierig sein)
+
+NU		Liste der Netzgroessen, die diese Konfiguration 
+		beinhaltet. Wird von 'make' benoetigt.
+
+inst/		Verzeichnis, in dem 'make' die
+		Konfigurationsbeschreibungen fuer Instanzen anlegt. 
+		Dort entstehen auch die 'Bootable Files'
+
+makefile	Lokales Makefile, wird von 'make aufgerufen
+
+torus.cfs	Vorlage fuer die Erzeugung von Tori mit anderem
+		Zeilen-/Spalten-Versatz durch 'mk_torus'
+
+vbb.??c.cfs	Generische Fassung einer Konfigurationsbeschreibung
+		fuer ?? Transputer in der Circle-Konfiguration
+
+vbb.??c.dsc	Generische Fassung einer Mapping-Datei fuer den NCM
+		fuer ?? Transputer in der Circle-Konfiguration

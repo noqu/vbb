@@ -1,0 +1,13 @@
+Dieses Verzeichnis enthaelt alle Dateien zum parallelen Kern.
+'make' erzeugt hier die Datei 'par_kernel.lib', die den 
+parallelen Kern als Library zum Binden mit Instanzfunktionen
+enthaelt.
+
+makefile	Lokales Makefile, wird von 'make' aufgerufen.
+
+obj/		Hier legt 'make' Objektdateien an.
+
+par_kernel.lib	Wird von 'make angelegt; enthaelt den fertigen
+		parallelen Kern.
+
+src/		C-Code fuer den parallelen Kern.

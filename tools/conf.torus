@@ -1,0 +1,60 @@
+:
+# Erzeugt ein .dsc-File fuer einen Torus der Groesse n x n
+# Mit Zeilenoffset und Spaltenoffset
+# conf.torus <size> <xoffset> <yoffset>
+
+if [ $# -ne 3 ]
+then
+    echo "$0 <size> <xoffset> <yoffset>" 2>&1
+    exit 1
+fi
+
+i=0
+n=$1
+n2=`expr $n \* $n`
+x=$2
+y=$3
+
+while [ $i -lt $n2 ]
+do
+    echo "PROC $i $i	type: 7 	memory: 4096 k	( transp )"
+    i=`expr $i + 1`
+done
+
+i=0
+while [ $i -lt $n2 ]
+do
+    # i.1 -> right(i).2 
+    # Wenn nicht am rechten Rand
+    # if (i % n != n -1)
+    if [ `expr $i % $n` -ne `expr $n - 1` ]
+    then
+	# connect tr[i].link[1] to tr[(i + 1) % n2].link[2];
+	echo "LINK $i 1,	`expr \( $i + 1 \) % $n2` 2"
+    # Sonst
+    else
+	# connect tr[i].link[1] to
+	#     tr[(i + 1 + n2 + ((x - 1) * n)) % n2].link[2];
+	echo "LINK $i 1,\
+	`expr \( $i + 1 + $n2 + \( \( $x - 1 \) \* $n \) \) % $n2` 2"
+    fi
+
+    # i.0 -> top(i).3 
+    # Wenn i nicht root und nicht erste Reihe
+    # if (i != 0 && i >= n)
+    if [ $i -ne 0 -a $i -ge $n ]
+    then
+        # connect tr[i].link[0] to tr[i - n].link[3];
+	echo "LINK $i 0,	`expr $i - $n` 3"
+    # Sonst wenn i nicht root, aber erste Reihe
+    # else if (i != 0)
+    elif [ $i -ne 0 ]
+    then
+        # connect tr[i].link[0] to
+	#    tr[n2 - n + ((i + n - y) % n)].link[3];
+	echo "LINK $i 0,\
+	`expr $n2 - $n + \( \( $i + $n - $y \) % $n \)` 3"
+    fi
+
+    i=`expr $i + 1`
+done
