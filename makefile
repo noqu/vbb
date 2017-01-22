@@ -14,7 +14,6 @@ SEQ_D=seq
 PAR_D=par
 INST_D=inst
 TOOLS_D=tools
-SUN_D=sun
 SCC=cc
 SLFLAGS=
 SH_CMD=echo `expr X$(CONF) : "X\([tc]\).*"` 
@@ -52,9 +51,6 @@ help:
 ## make <inst>.seq:
 ## 	Erzeugt eine Instanz mit sequentiellem Kern neu
 ## 
-## make <inst>.sun:
-## 	Erzeugt fuer die Sun eine Instanz mit sequentiellem Kern
-## 
 ## make single PROB=<inst> NR=<groesse> CONF=<conf>:
 ## 	Erzeugt einzelne Groessen fuer eine Instanz
 ## 	und Konfiguration neu
@@ -68,12 +64,11 @@ install:
 #------------------------------------------------------------
 all:
 	cd $(PAR_D) ; $(MAKE) par_kernel.lib
-	cd $(SEQ_D) ; $(MAKE) seq_kernel.lib
-	cd $(SUN_D) ; $(MAKE) sun_kernel.a
+	cd $(SEQ_D) ; $(MAKE) seq_kernel.a
 	cd $(INST_D) ; $(MAKE) all
-	$(MAKE) tsp.sun.intern PROB=tsp
-	$(MAKE) scp.sun.intern PROB=scp
-	$(MAKE) msp.sun.intern PROB=msp
+	$(MAKE) tsp.seq.intern PROB=tsp
+	$(MAKE) scp.seq.intern PROB=scp
+	$(MAKE) msp.seq.intern PROB=msp
 	cd $(LKU_D) ; $(MAKE) tsp.lku PROB=tsp
 	cd $(LKU_D) ; $(MAKE) tsp.seq.lku PROB=tsp
 	cd $(LKU_D) ; $(MAKE) tsp.red.lku PROB=tsp
@@ -119,7 +114,6 @@ clean:
 	rm -f $(BIN_D)/*.* 2>/dev/null
 	cd $(PAR_D) ; $(MAKE) clean
 	cd $(SEQ_D) ; $(MAKE) clean
-	cd $(SUN_D) ; $(MAKE) clean
 	cd $(INST_D) ; $(MAKE) clean
 	cd $(CONF_D)/circle ; $(MAKE) clean;
 	cd $(CONF_D)/torus ; $(MAKE) clean;
@@ -132,25 +126,19 @@ tsp.torus:
 tsp.circle:
 	$(MAKE) tsp.all.circle PROB=tsp CONF=circle L=c
 tsp.seq:
-	$(MAKE) tsp.seq.intern PROB=tsp CONF=seq
-tsp.sun:
-	$(MAKE) tsp.sun.intern PROB=tsp
+	$(MAKE) tsp.seq.intern PROB=tsp
 scp.torus:
 	$(MAKE) scp.all.torus PROB=scp CONF=torus L=t
 scp.circle:
 	$(MAKE) scp.all.circle PROB=scp CONF=circle L=c
 scp.seq:
-	$(MAKE) scp.seq.intern PROB=scp CONF=seq
-scp.sun:
-	$(MAKE) scp.sun.intern PROB=scp
+	$(MAKE) scp.seq.intern PROB=scp
 msp.torus:
 	$(MAKE) msp.all.torus PROB=msp CONF=torus L=t
 msp.circle:
 	$(MAKE) msp.all.circle PROB=msp CONF=circle L=c
 msp.seq:
-	$(MAKE) msp.seq.intern PROB=msp CONF=seq
-msp.sun:
-	$(MAKE) msp.sun.intern PROB=msp
+	$(MAKE) msp.seq.intern PROB=msp
 #------------------------------------------------------------
 $(PROB).all.$(CONF):
 	cd $(LKU_D) ; $(MAKE) $(PROB) $(PROB).red 
@@ -158,17 +146,12 @@ $(PROB).all.$(CONF):
 	$(TOOLS_D)/mk_exe $(CONF_D) $(BIN_D) $(PROB) all $(CONF) $(TOP_D)
 #------------------------------------------------------------
 $(PROB).seq.intern:
-	cd $(LKU_D) ; $(MAKE) $(PROB).seq 
-	cd $(CONF_D)/seq ; $(MAKE) $(PROB).seq.btl
-	$(TOOLS_D)/mk_exe $(CONF_D) $(BIN_D) $(PROB) seq seq $(TOP_D)
-#------------------------------------------------------------
-$(PROB).sun.intern:
-	cd $(SUN_D) ; $(MAKE) sun_kernel.a 
+	cd $(SEQ_D) ; $(MAKE) seq_kernel.a 
 	cd $(INST_D) ; $(MAKE) obj/u_$(PROB).o 
 	$(SCC) $(SLFLAGS) \
-	$(SUN_D)/sun_kernel.a \
+	$(SEQ_D)/seq_kernel.a \
 	$(INST_D)/obj/u_$(PROB).o \
-	-o $(BIN_D)/$(PROB).sun
+	-o $(BIN_D)/$(PROB).seq
 #------------------------------------------------------------
 $(PROB).$(NR)$(L): 
 	cd $(LKU_D) ; $(MAKE) $(PROB) $(PROB).red 

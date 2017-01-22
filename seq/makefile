@@ -1,41 +1,41 @@
 #------------------------------------------------------------
-# MAKEFILE fuer sequentielle Kern-Library
-# Transputer-Version
+# MAKEFILE fuer sequentielle Kern-Library auf Linux
 #------------------------------------------------------------
 # Norbert Kuck 
 #------------------------------------------------------------
 # 10.5.93
 #------------------------------------------------------------
-MYCC=icc
+MYCC=cc
 OBJ=obj
 SRC=src
 #------------------------------------------------------------
-CFLAGS= -t800
+CFLAGS=-DSUN_CC -O
 #------------------------------------------------------------
-seq_kernel.lib : \
-    $(OBJ)/startup.tco \
-    $(OBJ)/heap.tco \
-    $(OBJ)/mem.tco \
-    $(OBJ)/expand.tco \
-    $(OBJ)/read.tco \
-    $(OBJ)/set.tco \
-    $(OBJ)/trace.tco \
+seq_kernel.a : \
+    $(OBJ)/startup.o \
+    $(OBJ)/heap.o \
+    $(OBJ)/mem.o \
+    $(OBJ)/expand.o \
+    $(OBJ)/read.o \
+    $(OBJ)/set.o \
+    $(OBJ)/trace.o \
     ;
-	ilibr \
-	    $(OBJ)/startup.tco \
-	    $(OBJ)/heap.tco \
-	    $(OBJ)/mem.tco \
-	    $(OBJ)/expand.tco \
-	    $(OBJ)/read.tco \
-	    $(OBJ)/set.tco \
-	    $(OBJ)/trace.tco \
-	    -o seq_kernel.lib
+	ar rc seq_kernel.a \
+	    $(OBJ)/startup.o \
+	    $(OBJ)/heap.o \
+	    $(OBJ)/mem.o \
+	    $(OBJ)/expand.o \
+	    $(OBJ)/read.o \
+	    $(OBJ)/set.o \
+	    $(OBJ)/trace.o \
+	    ;
+	ranlib seq_kernel.a
 #------------------------------------------------------------
 clean:
-	rm -f obj/*.tco 2>/dev/null
-	rm -f seq_kernel.lib 2>/dev/null
+	rm -f obj/*.o 2>/dev/null
+	rm -f seq_kernel.a 2>/dev/null
 #------------------------------------------------------------
-$(OBJ)/startup.tco : \
+$(OBJ)/startup.o : \
     $(SRC)/startup.c \
     $(SRC)/error.h \
     $(SRC)/startup.h \
@@ -48,10 +48,10 @@ $(OBJ)/startup.tco : \
     $(SRC)/trace.h \
     $(SRC)/read.h \
     ;
-	$(MYCC) $(CFLAGS) $(SRC)/startup.c 
-	@mv startup.tco $(OBJ)
+	$(MYCC) $(CFLAGS) -c $(SRC)/startup.c 
+	@mv startup.o $(OBJ)
 #------------------------------------------------------------
-$(OBJ)/trace.tco : \
+$(OBJ)/trace.o : \
     $(SRC)/trace.c \
     $(SRC)/types.h \
     $(SRC)/u_types.h \
@@ -59,20 +59,20 @@ $(OBJ)/trace.tco : \
     $(SRC)/trace.h \
     $(SRC)/error.h \
     ;
-	$(MYCC) $(CFLAGS) $(SRC)/trace.c
-	@mv trace.tco $(OBJ)
+	$(MYCC) $(CFLAGS) -c $(SRC)/trace.c
+	@mv trace.o $(OBJ)
 #------------------------------------------------------------
-$(OBJ)/heap.tco : \
+$(OBJ)/heap.o : \
     $(SRC)/heap.c \
     $(SRC)/types.h \
     $(SRC)/error.h \
     $(SRC)/heap.h \
     $(SRC)/trace.h \
     ;
-	$(MYCC) $(CFLAGS) $(SRC)/heap.c 
-	@mv heap.tco $(OBJ)
+	$(MYCC) $(CFLAGS) -c $(SRC)/heap.c 
+	@mv heap.o $(OBJ)
 #------------------------------------------------------------
-$(OBJ)/expand.tco : \
+$(OBJ)/expand.o : \
     $(SRC)/expand.c \
     $(SRC)/error.h \
     $(SRC)/heap.h \
@@ -83,10 +83,10 @@ $(OBJ)/expand.tco : \
     $(SRC)/u_funcs.h \
     $(SRC)/trace.h \
     ;
-	$(MYCC) $(CFLAGS) $(SRC)/expand.c 
-	@mv expand.tco $(OBJ)
+	$(MYCC) $(CFLAGS) -c $(SRC)/expand.c 
+	@mv expand.o $(OBJ)
 #------------------------------------------------------------
-$(OBJ)/mem.tco : \
+$(OBJ)/mem.o : \
     $(SRC)/mem.c \
     $(SRC)/mem.h \
     $(SRC)/error.h \
@@ -95,21 +95,21 @@ $(OBJ)/mem.tco : \
     $(SRC)/u_funcs.h \
     $(SRC)/trace.h \
     ;
-	$(MYCC) $(CFLAGS) $(SRC)/mem.c
-	@mv mem.tco $(OBJ)
+	$(MYCC) $(CFLAGS) -c $(SRC)/mem.c
+	@mv mem.o $(OBJ)
 #------------------------------------------------------------
-$(OBJ)/read.tco : \
+$(OBJ)/read.o : \
     $(SRC)/read.c \
     $(SRC)/read.h \
     $(SRC)/error.h \
     ;
-	$(MYCC) $(CFLAGS) $(SRC)/read.c
-	@mv read.tco $(OBJ)
+	$(MYCC) $(CFLAGS) -c $(SRC)/read.c
+	@mv read.o $(OBJ)
 #------------------------------------------------------------
-$(OBJ)/set.tco : \
+$(OBJ)/set.o : \
     $(SRC)/set.c \
     $(SRC)/set.h \
     ;
-	$(MYCC) $(CFLAGS) $(SRC)/set.c
-	@mv set.tco $(OBJ)
+	$(MYCC) $(CFLAGS) -c $(SRC)/set.c
+	@mv set.o $(OBJ)
 #------------------------------------------------------------
