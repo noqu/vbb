@@ -20,8 +20,8 @@
 #define	ALIGN(X)	((((X) + sizeof (int) - 1) / sizeof (int)) \
 			 * sizeof (int))
 
-#ifdef SUN_CC
 #ifdef VBB_ORIGINAL
+#ifdef SUN_CC
 #define SPRINTF(ARGS)	(strlen (sprintf ARGS))
 #else
 #define SPRINTF(ARGS)   (sprintf ARGS)

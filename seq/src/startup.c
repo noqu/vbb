@@ -12,7 +12,7 @@
 
 #include  <stdio.h>
 #include  <stdlib.h>
-#ifndef SUN_CC
+#ifdef VBB_ORIGINAL
 #include <misc.h>
 #endif
 #include  <time.h>
@@ -326,14 +326,17 @@ int		sts;
     fprintf (stderr, "*** exiting...\n");
    }
 
+#ifdef VBB_ORIGINAL
 #ifdef SUN_CC
 exit_terminate ()
    {
-#ifdef VBB_ORIGINAL
     exit ();
-#else
-    exit (0);
+   }
 #endif
+#else
+exit_terminate ()
+   {
+    exit (0);
    }
 #endif
 

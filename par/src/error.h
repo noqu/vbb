@@ -58,8 +58,8 @@ extern int	print_error (
 /*------------------------ SPRINTF ------------------------------*/
 /* Wegen unterschiedlicher Definition in SysV und BSD: */
 
-#ifdef SUN_CC
 #ifdef VBB_ORIGINAL
+#ifdef SUN_CC
 #define SPRINTF(ARGS)	(strlen (sprintf ARGS))
 #else
 #define SPRINTF(ARGS)   (sprintf ARGS)

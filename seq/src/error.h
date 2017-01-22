@@ -48,8 +48,12 @@ extern int	print_error (
 
 /*------------------------ MAKROS -------------------------------*/
 
+#ifdef VBB_ORIGINAL
 #ifdef SUN_CC
 #define SPRINTF(ARGS)	(strlen (sprintf ARGS))
+#else
+#define SPRINTF(ARGS)	(sprintf ARGS)
+#endif
 #else
 #define SPRINTF(ARGS)	(sprintf ARGS)
 #endif
