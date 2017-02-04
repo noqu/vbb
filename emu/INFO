@@ -1,7 +1,8 @@
-INFO
-makefile
-obj
-run_test.sh
-src
-test_emu
-TODO.txt
+This directory contains a (very minimal) emulation of the transputer
+functionality required for the VBB project. It is not part of the original
+Diplomarbeit. 
+
+makefile	Local makefile for the emulation library
+obj		This is where 'make' puts objects
+run_test.sh	Shellscript to configure and run a 2-transputer mini test
+src		C-Code for the emulation
