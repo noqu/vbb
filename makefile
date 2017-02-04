@@ -51,6 +51,15 @@ help:
 ## make <inst>.seq:
 ## 	Erzeugt eine Instanz mit sequentiellem Kern neu
 ## 
+## #ifndef VBB_ORIGINAL
+## make emulation:
+##      Creates the libraries and test program for the transputer
+##      emulation
+##
+## make <inst>.par:
+## 	Erzeugt eine Instanz mit parallelem Kern neu
+## #endif
+## 
 ## make single PROB=<inst> NR=<groesse> CONF=<conf>:
 ## 	Erzeugt einzelne Groessen fuer eine Instanz
 ## 	und Konfiguration neu
@@ -120,6 +129,9 @@ clean:
 	cd $(CONF_D)/seq ; $(MAKE) clean;
 	cd $(LKU_D) ; $(MAKE) clean;
 	cd $(TOOLS_D) ; $(MAKE) clean;
+#ifndef VBB_ORIGINAL
+	cd emu ; $(MAKE) clean
+#endif
 #------------------------------------------------------------
 tsp.torus:
 	$(MAKE) tsp.all.torus PROB=tsp CONF=torus L=t
@@ -127,18 +139,30 @@ tsp.circle:
 	$(MAKE) tsp.all.circle PROB=tsp CONF=circle L=c
 tsp.seq:
 	$(MAKE) tsp.seq.intern PROB=tsp
+#ifndef VBB_ORIGINAL
+tsp.par:
+	$(MAKE) tsp.par.intern PROB=tsp
+#endif
 scp.torus:
 	$(MAKE) scp.all.torus PROB=scp CONF=torus L=t
 scp.circle:
 	$(MAKE) scp.all.circle PROB=scp CONF=circle L=c
 scp.seq:
 	$(MAKE) scp.seq.intern PROB=scp
+#ifndef VBB_ORIGINAL
+scp.par:
+	$(MAKE) scp.par.intern PROB=scp
+#endif
 msp.torus:
 	$(MAKE) msp.all.torus PROB=msp CONF=torus L=t
 msp.circle:
 	$(MAKE) msp.all.circle PROB=msp CONF=circle L=c
 msp.seq:
 	$(MAKE) msp.seq.intern PROB=msp
+#ifndef VBB_ORIGINAL
+msp.par:
+	$(MAKE) msp.par.intern PROB=msp
+#endif
 #------------------------------------------------------------
 $(PROB).all.$(CONF):
 	cd $(LKU_D) ; $(MAKE) $(PROB) $(PROB).red 
@@ -152,6 +176,20 @@ $(PROB).seq.intern:
 	$(SEQ_D)/seq_kernel.a \
 	$(INST_D)/obj/u_$(PROB).o \
 	-o $(BIN_D)/$(PROB).seq
+#------------------------------------------------------------
+#ifndef VBB_ORIGINAL
+$(PROB).par.intern:
+	cd $(PAR_D) ; $(MAKE) par_kernel.a 
+	cd $(INST_D) ; $(MAKE) obj/u_$(PROB).o 
+	$(SCC) $(SLFLAGS) \
+	$(PAR_D)/par_kernel.a \
+	$(INST_D)/obj/u_$(PROB).o \
+	-o $(BIN_D)/$(PROB).par
+
+emulation:
+	cd $(PAR_D) ; $(MAKE) par_kernel.a
+	cd emu ; $(MAKE) test_emu
+#endif
 #------------------------------------------------------------
 $(PROB).$(NR)$(L): 
 	cd $(LKU_D) ; $(MAKE) $(PROB) $(PROB).red 

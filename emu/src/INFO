@@ -1,0 +1,12 @@
+This directory contains the sources for the transputer emulation
+
+channel.c	Emulation of channels between transputers (named pipes)
+channel.h	Declarations for channels (originally from INMOS lib)
+
+process.c	Emulation of transputer processes (threads)
+process.h	Declarations for processes (originally from INMOS lib)
+
+misc.c		Miscellaneous emulated functions
+misc.h		Declarations for misc (originally mostly from INMOS lib)
+
+test_emu.c	Test program for the emulation
