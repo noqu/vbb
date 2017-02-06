@@ -14,6 +14,7 @@ void receiver(Channel* c, intptr_t cpu_nr, int* finished) {
            *finished = 1;
        }
     }
+    fprintf(stderr, "[%d] Receiver finished\n", cpu_nr);
 }
 
 // Small test (expecting 2 transputers connected via link 0)
@@ -88,5 +89,15 @@ int main(int ac, char **av) {
     while (!receiverFinished) {
         ProcReschedule();
     }
-    fprintf(stderr, "[%d] Receiver finished\n", cpu_nr);
+
+    // Root simply waits, partner terminates
+    if (cpu_nr == 0) {
+	fprintf(stderr, "[%d] Sleeping\n", cpu_nr);
+	sleep(10);
+	fprintf(stderr, "[%d] *** Woke up\n", cpu_nr);
+    } else {
+	sleep(1);
+	fprintf(stderr, "[%d] Terminating\n", cpu_nr);
+	exit_terminate(1);
+    }
 }

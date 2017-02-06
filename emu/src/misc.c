@@ -139,8 +139,9 @@ void* get_param(int index) {
     }
 }
 
-// Exit the currently executing transputer program abruptly (originally also
-// making the server exit with status 'n', but we don't bother emulating that)
+// Exit the currently executing transputer program abruptly, stopping all
+// transputers (originally also making the server exit with status 'n', but
+// we don't bother emulating that)
 void exit_terminate(int n) {
     fprintf(stderr, "exit_terminate called on TP %d\n", tp.tp_self);
     killpg(tp.tp_pgid, SIGTERM);
