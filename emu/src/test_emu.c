@@ -6,7 +6,7 @@
 #include "misc.h"
 
 // Thread to receive and print integers until it gets a 0
-void receiver(Channel* c, intptr_t cpu_nr, int* finished) {
+void receiver(Process* p, Channel* c, intptr_t cpu_nr, int* finished) {
     while (!(*finished)) {
        int i = ChanInInt(c);
        fprintf(stderr, "[%d] Thread received %d\n", (int) cpu_nr, i);

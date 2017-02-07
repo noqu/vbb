@@ -53,7 +53,7 @@ void* invokeMainFunction(void *_p) {
     // FIXME: Somewhat ugly: Simply call the process's main function with MAX_ARGS
     // pointer size args - it does not harm to push more into the stack frame than
     // the callee will use
-    p->func(p->args[0], p->args[1], p->args[2], p->args[3],
+    p->func(p, p->args[0], p->args[1], p->args[2], p->args[3],
             p->args[4], p->args[5], p->args[6], p->args[7]);
 }
 
