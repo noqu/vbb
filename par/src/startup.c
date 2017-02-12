@@ -27,6 +27,9 @@
 #include  <misc.h>
 #include  <time.h>
 #include  <string.h>
+#ifndef VBB_ORIGINAL
+#include  <unistd.h>
+#endif
 #include  "types.h"
 #include  "u_types.h"
 #include  "queue.h"
@@ -44,11 +47,19 @@
 /*------------------------ GLOBALE VEREINBARUNGEN ---------------*/
 
 stat_t		statistic;
+#ifdef VBB_ORIGINAL
 int		m_finished;
 int		d_finished;
 int		e_finished;
 int		in_finished[4];
 int		out_finished[4];
+#else
+volatile int	m_finished;
+volatile int	d_finished;
+volatile int	e_finished;
+volatile int	in_finished[4];
+volatile int	out_finished[4];
+#endif
 int		parallel;
 glob_t		glob;
 
@@ -117,6 +128,10 @@ char	**av;
 #ifdef TRACE_ON
     trace_t		*trace_buf;
     int			served;
+#endif
+
+#ifndef VBB_ORIGINAL
+    emulation_init(ac, av);
 #endif
 
     /* Hole Parameter aus icconf-Konfigurationsdatei: */
@@ -297,10 +312,17 @@ char	**av;
        }
 
     /* Starte Memserver: */
+#ifdef VBB_ORIGINAL
     proc_memserver = ProcAlloc (mem_server, STACK_SIZE, 6, m_inqs, 
 				m_outqs, u_glob, MEM_MIN_LEVEL, 
 				MEM_MAX_LEVEL,
 				tracer_qs[tt++]);
+#else
+    proc_memserver = ProcAlloc (mem_server, STACK_SIZE, 6, m_inqs, 
+				m_outqs, u_glob, (intptr_t) MEM_MIN_LEVEL, 
+				(intptr_t) MEM_MAX_LEVEL,
+				tracer_qs[tt++]);
+#endif
     if (!proc_memserver)
        {
 	m_finished = S_PROC_ALLOC;
@@ -343,10 +365,17 @@ char	**av;
        }
 
     /* Starte Dispatcher: */
+#ifdef VBB_ORIGINAL
     proc_dispatcher = ProcAlloc (disp_server, STACK_SIZE, 7, 
 				 disp_to_exp, exp_to_disp, disp_to_mem, 
 				 disp_to_out, in_to_disp, cpu_nr,
 				 tracer_qs[tt++]);
+#else
+    proc_dispatcher = ProcAlloc (disp_server, STACK_SIZE, 7, 
+				 disp_to_exp, exp_to_disp, disp_to_mem, 
+				 disp_to_out, in_to_disp, (intptr_t) cpu_nr,
+				 tracer_qs[tt++]);
+#endif
     if (!proc_dispatcher)
        {
 	d_finished = S_PROC_ALLOC;
@@ -373,10 +402,17 @@ char	**av;
 	if (link_connected[i])
 	   {
 	    /* Starte In-Prozess: */
+#ifdef VBB_ORIGINAL
 	    proc_in[i] = ProcAlloc (in, STACK_SIZE, 6, i, 
 				    u_glob, in_channel[i], 
 				    mem_to_in[i], in_to_disp[i], 
 				    tracer_qs[tt++]);
+#else
+	    proc_in[i] = ProcAlloc (in, STACK_SIZE, 6, (intptr_t) i, 
+				    u_glob, in_channel[i], 
+				    mem_to_in[i], in_to_disp[i], 
+				    tracer_qs[tt++]);
+#endif
 	    if (!proc_in[i])
 	       {
 		in_finished[i] = S_PROC_ALLOC;
@@ -387,10 +423,17 @@ char	**av;
 	    TV ("Started In", i)
 
 	    /* Starte Out-Prozess: */
+#ifdef VBB_ORIGINAL
 	    proc_out[i] = ProcAlloc (out, STACK_SIZE, 6, i, 
 				     u_glob, out_channel[i], 
 				     disp_to_out[i], out_to_mem[i], 
 				     tracer_qs[tt++]);
+#else
+	    proc_out[i] = ProcAlloc (out, STACK_SIZE, 6, (intptr_t) i, 
+				     u_glob, out_channel[i], 
+				     disp_to_out[i], out_to_mem[i], 
+				     tracer_qs[tt++]);
+#endif
 	    if (!proc_out[i])
 	       {
 		out_finished[i] = S_PROC_ALLOC;

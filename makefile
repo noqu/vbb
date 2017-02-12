@@ -180,10 +180,13 @@ $(PROB).seq.intern:
 #ifndef VBB_ORIGINAL
 $(PROB).par.intern:
 	cd $(PAR_D) ; $(MAKE) par_kernel.a 
+	cd emu ; $(MAKE) emulation.a
 	cd $(INST_D) ; $(MAKE) obj/u_$(PROB).o 
 	$(SCC) $(SLFLAGS) \
 	$(PAR_D)/par_kernel.a \
+	emu/emulation.a \
 	$(INST_D)/obj/u_$(PROB).o \
+	-pthread \
 	-o $(BIN_D)/$(PROB).par
 
 emulation:

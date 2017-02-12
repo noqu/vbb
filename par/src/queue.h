@@ -27,15 +27,25 @@
 
 typedef struct q_item_st
    {
+#ifdef VBB_ORIGINAL
     int		type;
     void	*data;
+#else
+    volatile int	type;
+    volatile void	*data;
+#endif
    }
 q_item_t;
 
 typedef struct queue_st
    {
+#ifdef VBB_ORIGINAL
     int		read;
     int		write;
+#else
+    volatile int	read;
+    volatile int	write;
+#endif
     q_item_t	*buf;
     int		size;
    }
@@ -52,7 +62,11 @@ extern boolean	q_read_bl (
 			queue_t*	/* queue */, 
 			int*		/* ptype */, 
 			void**		/* pdata */, 
+#ifdef VBB_ORIGINAL
 			int*		/* dead */);
+#else
+			volatile int*	/* dead */);
+#endif
 
 extern boolean	q_write (
 			queue_t*	/* queue */, 
@@ -63,7 +77,11 @@ extern boolean	q_write_bl (
 			queue_t*	/* queue */, 
 			int		/* type */, 
 			void*		/* data */, 
+#ifdef VBB_ORIGINAL
 			int*		/* dead */);
+#else
+			volatile int*	/* dead */);
+#endif
 
 extern int	q_length (
 			queue_t*	/* queue */);

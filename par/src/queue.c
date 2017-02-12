@@ -44,7 +44,11 @@ public boolean	q_read_bl (
 			queue_t*	/* queue */, 
 			int*		/* ptype */, 
 			void**		/* pdata */, 
+#ifdef VBB_ORIGINAL
 			int*		/* dead */);
+#else
+			volatile int*	/* dead */);
+#endif
 
 public boolean	q_write (
 			queue_t*	/* queue */, 
@@ -55,7 +59,11 @@ public boolean	q_write_bl (
 			queue_t*	/* queue */, 
 			int		/* type */, 
 			void*		/* data */, 
+#ifdef VBB_ORIGINAL
 			int*		/* dead */);
+#else
+			volatile int*	/* dead */);
+#endif
 
 public int	q_length (
 			queue_t*	/* queue */);
@@ -185,7 +193,11 @@ boolean	q_write_bl (queue, type, data, dead)
 queue_t		*queue;
 int		type;
 void		*data;
+#ifdef VBB_ORIGINAL
 int		*dead;
+#else
+volatile int	*dead;
+#endif
 
    {
     int		sts;
@@ -215,7 +227,11 @@ boolean	q_read_bl (queue, ptype, pdata, dead)
 queue_t		*queue;
 int		*ptype;
 void		**pdata;
+#ifdef VBB_ORIGINAL
 int		*dead;
+#else
+volatile int	*dead;
+#endif
  
    {
     int		sts;
