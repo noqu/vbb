@@ -1,24 +1,32 @@
 #!/bin/sh
 
-# Configure two transputers, connected by 1 channel
-mkdir -p links
-rm -f links/tr_*_ch_*_* links/config.txt
-mkfifo links/tr_0_ch_0_in
-mkfifo links/tr_1_ch_0_in
-ln -s tr_0_ch_0_in links/tr_1_ch_0_out
-ln -s tr_1_ch_0_in links/tr_0_ch_0_out
+if [ $# -lt 2 ]; then
+    echo "Usage: run_test.sh <link_dir> <program> ..." >&2
+    exit 1
+fi
+LINK_DIR=$1
+PROGRAM=$2
+shift 2
 
-# Dump fixed part of configuration into file
-echo "
-TP_RING_LAST=1
-TP_NUM_TPS=2
-TP_NUM_CHANS=1
-TP_PIPE_DIR=links
-TP_PGID=$$
-" > links/config.txt
+# Just for paranoia, read once from all named pipes, to make sure nothing 
+# was left from previous runs (unlikely but possible)
+for PIPE in `/bin/ls $LINK_DIR/tr_*_ch_*_in 2>/dev/null`; do
+    /bin/dd if=$PIPE of=/dev/null iflag=nonblock > /dev/null 2>&1
+done
 
-# Run two instances of test_emu
-./test_emu @links/config.txt TP_SELF=0 &
-./test_emu @links/config.txt TP_SELF=1 &
+# Read number of transputers from config file
+CONFIG="$LINK_DIR/config.txt"
+if [ ! -r "$CONFIG" ] ; then
+    echo "Config file $CONFIG not found" >&2
+    exit 1
+fi
+eval `grep '^TP_NUM_TPS=[0-9]*' $CONFIG`
+
+# Start the appropriate number of processes
+I=0
+while [ $I -lt $TP_NUM_TPS ] ; do
+    $PROGRAM @$CONFIG TP_PIPE_DIR=$LINK_DIR TP_SELF=$I TP_PGID=$$ $* &
+    I=`expr $I + 1`
+done
 
 wait
