@@ -566,6 +566,9 @@ char	**av;
 	print_stat (-1, statistic);
 
     /* Gib Zeit aus: */
+#ifndef VBB_ORIGINAL
+    if (cpu_nr == 0)
+#endif
     fprintf (stderr, "TIME: %.3f\n", 
 	     (float) statistic.time / (float) CLOCKS_PER_SEC);
 

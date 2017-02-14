@@ -137,7 +137,11 @@ char	**av;
 	print_stat (0, statistic);
 
     /* Gib Zeit aus: */
+#ifdef VBB_ORIGINAL
     fprintf (stderr, "TIME: %d\n", statistic.time);
+#else
+    fprintf (stderr, "TIME: %.3f\n", (float) statistic.time / (float) CLOCKS_PER_SEC);
+#endif
 
     if (!(glob.flags & NO_SOLUTION))
        {
