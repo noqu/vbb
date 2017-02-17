@@ -10,6 +10,9 @@
 #include  <stdio.h>
 #include  <sys/types.h>
 #include  <sys/timeb.h>
+#ifndef VBB_ORIGINAL
+#include  <stdlib.h>
+#endif
 /*------------------------ GLOBALE VEREINBARUNGEN ---------------*/
 /*------------------------ MAKROS -------------------------------*/
 #define  USAGE { fprintf (stderr,\

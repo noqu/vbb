@@ -72,6 +72,12 @@ install:
 
 #------------------------------------------------------------
 all:
+#ifndef VBB_ORIGINAL
+	$(MAKE) tsp.seq scp.seq msp.seq tsp.par scp.par msp.par
+	cd emu; $(MAKE) all
+	cd tools; $(MAKE) all
+_not_used:
+#else
 	cd $(PAR_D) ; $(MAKE) par_kernel.lib
 	cd $(SEQ_D) ; $(MAKE) seq_kernel.a
 	cd $(INST_D) ; $(MAKE) all
@@ -115,6 +121,7 @@ all:
 	$(TOOLS_D)/mk_exe $(CONF_D) $(BIN_D) scp seq seq $(TOP_D)
 	$(TOOLS_D)/mk_exe $(CONF_D) $(BIN_D) msp seq seq $(TOP_D)
 	cd $(TOOLS_D) ; $(MAKE) all
+#endif
 #------------------------------------------------------------
 single:
 	$(MAKE) $(PROB).$(NR)$(L) CONF=$(CONF) L=$(L)
