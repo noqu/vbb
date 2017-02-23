@@ -24,7 +24,7 @@ Result value (length) and list of nodes are printed by default.
 The original implementation was for multiple processes on a network of transputers, the reconstruction
 uses multiple threads on a "network" of processes connected by named pipes. 
 
-Example:  Traveling salesman example problem Nr. 7, using 16 parameters as described for the speedup tests. 
+Example:  Traveling salesman example problem Nr. 7, using 16 processors, with parameters (from the file `para.16`) as described for the speedup tests. 
 
 ```
 $ bin/tsp.16t @test/tsp/speedup/para.16 mat=test/tsp/TSPs/tsp30.7
