@@ -66,7 +66,7 @@ void emulation_init(int ac, char** av) {
         fail("Missing parameter TP_NUM_CHANS");
     }
     tp.tp_num_chans = atoi(param);
-    if (tp.tp_num_chans < 1 || tp.tp_num_chans > 4) {
+    if (tp.tp_num_chans < 0 || tp.tp_num_chans > 4) {
         fail("Invalid parameter TP_NUM_CHANS");
     }
 
