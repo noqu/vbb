@@ -1,6 +1,11 @@
 #ifndef EMULATOR_PROCESS_H
 
 #include <pthread.h>
+// OS X does not support pthread_yield(), only pthread_yield_np()
+#if defined(__APPLE__) || defined(__MACH__)
+#define pthread_yield() pthread_yield_np()
+#endif
+
 #include <stdarg.h>
 
 #define MAX_ARGS 8
